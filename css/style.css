@@ -1,0 +1,56 @@
+body,
+html {
+    width: 100%;
+	height: 100%;
+}
+
+body, p{
+    background: #1D1E22;
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    color: #7E7E7E;
+}
+
+h1, 
+.name_logo a {
+    color: #fff;
+    font-weight: 900;
+    font-size: 2.2rem;
+    line-height: 3.25rem;
+    font-family: sans-serif;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+li a {
+	color: #4d5055;
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.name_logo a:hover {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+
+/**********************/
+/*     Navigation     */
+/**********************/
+.navbar {
+	font-weight: 600;
+	font-size: 0.875rem;
+	line-height: 0.875rem;
+	box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.025);
+}
+
+.navbar .nav-item .nav-link {
+	padding-top: 0.625rem;
+	padding-bottom: 0.625rem;
+	color: #ffffff;
+	transition: all 0.2s ease;
+}
+
