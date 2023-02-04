@@ -25,12 +25,10 @@ h1,
     text-align: center;
 }
 
-h1 a {
-	text-decoration: none;
-}
-
-h1 a:hover {
-	text-decoration: none;
+.name_logo h1 {
+	margin-top: 3.0rem;
+	font-family: "inter", sans-serif;
+	font-size: 32px;
 }
 
 li a {
@@ -65,7 +63,7 @@ a:hover {
 /**********************/
 
 .page-container {
-	margin-top: 1.5rem;
+	margin-top: 2.5rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -78,6 +76,26 @@ img {
 	float: left;
 	margin-right: 25px;
 	margin-bottom: 15px;
+}
+
+.text-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 20px;
+
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.text-box h1 a {
+	text-decoration: none;
+}
+
+.text-box h1 a:hover {
+	text-decoration: none;
 }
 
 .wave:hover {
@@ -114,3 +132,32 @@ img {
 		transform: rotate( 0.0deg)
 	}
 }
+
+.text-box p {
+	color: #ffffff;
+	padding: 0;
+	margin: 0;
+
+	font-weight: 300;
+	font-size: 20px;
+	line-height: 33px;
+
+	align-self: stretch;
+	flex-grow: 0;
+}
+
+img.emojione {
+	/*Override any img styles to ensure Emojis are displayed inline*/
+	margin: 0px !important;
+	display: inline !important;
+
+	height: auto;
+	width: 50px;
+}
+
+span.emoji {
+	font-size: 30px;
+	vertical-align: middle;
+	line-height: 3;
+}
+
