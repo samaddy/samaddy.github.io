@@ -31,7 +31,7 @@
 
     <style>
         body {
-            background: #1b1a1c;
+            background: var(--main-bg-color);
             font-family: 'Open Sans', Helvetica, sans-serif;
             color: #7E7E7E;
         }
@@ -70,6 +70,15 @@
             font-size: 32px;
         }
 
+        /* Contact information */
+        .contact-container {
+            margin: 20px;
+            color: #fff;
+        }
+        
+        .handle {
+            background-color: var(--handle);
+        }
         /* socials and copyright */
         .socials-copyright {
             /* display: flex; */
@@ -128,7 +137,20 @@
         </div>
     </section>
 
-    <h1>Contact</h1>
+    <section class="contact-container">
+        <div class="page-title">
+            <h1>Contact</h1>
+        </div>
+        <div class="contact-info">
+            <p>
+                Thanks for stopping by! If you have any questions or just want to say hello, feel free to drop me 
+                a line. I'd love to hear from you!
+            </p>
+            <p>Connect with me on Linkedin as <span class="handle">Samuel K. Addison</span></p>
+            <p>Let's vibe on twitter as well <span class="handle">@Prof_Addy</span></p>
+            <p>You may also shoot me an email at <span class="handle">samueladdison@proton.me</span></p>
+        </div>
+    </section>
 
     <section class="socials-copyright">
         <div class="footer">
