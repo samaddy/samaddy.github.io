@@ -1,6 +1,10 @@
         /**********************/
         /*     General        */
         /**********************/
+        :root {
+            --main-bg-color: #1b1a1c;
+            --handle: black;
+        }
         body,
         html {
             width: 100%;
@@ -8,7 +12,7 @@
         }
 
         body {
-            background-color: #1b1a1c;
+            background-color: var(--main-bg-color);
             font-family: 'Open Sans', Helvetica, sans-serif;
             color: #7E7E7E;
         }
