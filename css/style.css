@@ -164,7 +164,7 @@
         /* socials and copyright */
         .socials-copyright {
             /* display: flex; */
-            padding-top: 5rem;
+            /* padding-top: 4rem; */
             text-align: center;
             bottom: 0;
             right: 0;
@@ -172,7 +172,7 @@
         }
 
         .footer {
-            padding-top: 9.25rem;
+            padding-top: 2rem;
             padding-bottom: 1rem; 
             text-align: center;
         } 
@@ -268,11 +268,11 @@
             }
 
             .footer {
-                padding-top: 1rem;
+                padding-top: 2rem;
             } 
 
             .p-small {
-                margin-top: 15px;
+                /* margin-top: 8px; */
                 color: #fff;
                 font-size: 14px;
             } 
