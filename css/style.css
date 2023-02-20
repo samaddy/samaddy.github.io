@@ -28,6 +28,14 @@
             text-align: center;
         }
 
+        a {
+            color: #ff8000;
+        }
+
+        a:hover {
+            color: #ff8000;
+        }
+
         .nav a {
             color: #fff;
         }
