@@ -28,20 +28,19 @@
             text-align: center;
         }
 
-        a {
-            color: #ff8000;
-        }
+        /* .nav a {
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+        } */
 
-        a:hover {
-            color: #ff8000;
-        }
-
-        .nav a {
+        .nav a:link {
             color: #fff;
         }
 
-        .nav a:hover {
+        .nav a:hover, a:active{
+            color: #fff;
             text-decoration: underline;
+            text-underline-offset: 3px;
         }
 
         .container-fluid a:hover {
@@ -51,6 +50,11 @@
         .nav-link{
             color: #fff;
             
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
         
         .container-fluid h1 {
@@ -171,6 +175,14 @@
 
         .bullet-1 p {
             line-height: 25px;
+        }
+
+        .bullet-1 a {
+            color: #ff8000;
+        }
+
+        .bullet-1 a:hover {
+            color: #ff8000;
         }
 
         /* socials and copyright */
