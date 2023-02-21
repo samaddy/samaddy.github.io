@@ -34,7 +34,7 @@
 
         .nav a:hover, a:active{
             color: #fff;
-            text-decoration: underline 2px;
+            text-decoration: underline;
             text-underline-offset: 3px;
         }
 
