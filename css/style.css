@@ -28,18 +28,13 @@
             text-align: center;
         }
 
-        /* .nav a {
-            border-bottom: 1px solid #000;
-            padding-bottom: 3px;
-        } */
-
         .nav a:link {
             color: #fff;
         }
 
         .nav a:hover, a:active{
             color: #fff;
-            text-decoration: underline;
+            text-decoration: underline 2px;
             text-underline-offset: 3px;
         }
 
@@ -49,11 +44,10 @@
 
         .nav-link{
             color: #fff;
-            
         }
 
         .active {
-            text-decoration: underline;
+            text-decoration: underline 2px;
             text-underline-offset: 3px;
         }
         
