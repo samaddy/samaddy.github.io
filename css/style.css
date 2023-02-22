@@ -225,6 +225,10 @@
             /* body{
                 background-color: #1f0d0f;
             } */
+            .active {
+                text-decoration: underline;
+            }
+            
             .page-container {
                 display: contents;
                 margin-top: 15px;
