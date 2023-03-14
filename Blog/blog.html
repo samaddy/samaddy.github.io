@@ -129,7 +129,32 @@
             margin-top: 10px;
             color: #fff;
             font-size: 15px;
-        } 
+        }
+        
+        article {
+        /*   background: darkgrey; */
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+        border-radius:0.5rem;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;margin:0 auto
+        }
+
+        .blogs a {
+        text-decoration: none;
+        }
+
+        .blog-card {
+        padding-bottom: 10px;
+        /*   background: lightgreen; */
+        border-radius: 10px;
+        }
+
+        .blog-intro {
+            color: #fff;
+        }
 
         @media screen and (max-width: 780px) {
             .contact-container {
@@ -168,7 +193,57 @@
     </section>
 
     <h1>Blog</h1>
-    <p>You're welcome to my blog!</p>
+    <article class="blogs">
+        <div class="blog-card">
+            <div class="blog-info">
+                <time datetime="2023-03-12">Sunday, March 12, 2023</time>
+                <h2><a href="https://samaddy.github.io/">Getting started with ethical hacking</a></h2>
+            </div>
+            <div class="blog-intro">
+                <p>
+                As a software developer, I pride myself on my problem-solving skills and my ability to collaborate effectively with cross-functional teams. 
+                I am confident that I could make a valuable contribution to your team and help you to deliver innovative software solutions that meet the needs of your clients.
+                </p>
+            </div>
+        </div>
+
+        <div class="blog-card">
+          <div class="blog-info">
+           <time datetime="2023-03-12">Sunday, March 12, 2023</time>
+          <h2><a href="https://samaddy.github.io/">Getting started with ethical hacking</a></h2>
+        </div>
+        <div class="blog-intro">
+          <p>
+            As a software developer, I pride myself on my problem-solving skills and my ability to collaborate effectively with cross-functional teams. 
+             I am confident that I could make a valuable contribution to your team and help you to deliver innovative software solutions that meet the needs of your clients.</p>
+        </div>
+        </div>
+        
+        <div class="blog-card">
+          <div class="blog-info">
+           <time datetime="2023-03-12 02:39">Sunday, March 12, 2023</time>
+           <h2><a href="https://samaddy.github.io/">Getting started with ethical hacking</a></h2>
+        </div>
+        <div class="blog-intro">
+          <p>
+            As a software developer, I pride myself on my problem-solving skills and my ability to collaborate effectively with cross-functional teams. 
+             I am confident that I could make a valuable contribution to your team and help you to deliver innovative software solutions that meet the needs of your clients.</p>
+        </div>
+        </div>
+        
+        <div class="blog-card">
+          <div class="blog-info">
+           <time datetime="2023-03-12 02:39">Sunday, March 12, 2023</time>
+          <h2><a href="https://samaddy.github.io/">Exercise</a></h2>
+        </div>
+        <div class="blog-intro">
+          <p>
+            As a software developer, I pride myself on my problem-solving skills and my ability to collaborate effectively with cross-functional teams. 
+             I am confident that I could make a valuable contribution to your team and help you to deliver innovative software solutions that meet the needs of your clients.</p>
+        </div>
+        </div>
+      
+      </article>
 
     <section>
 
