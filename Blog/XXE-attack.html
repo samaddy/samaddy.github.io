@@ -160,14 +160,13 @@
         }
         
         article {
-        /* background: darkgrey; */
         position: relative;
         padding: 20px;
         z-index: 2;
-        border-radius:0.5rem;
 
         max-width:calc(100vw - 4rem);
-        width:60rem;margin:0 auto
+        width:60rem;
+        margin:0 auto
         }
 
         .caption {
@@ -184,6 +183,10 @@
 
        
         @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
             .contact-container {
             margin-left: 15px;
             margin-right: 15px;
@@ -345,6 +348,50 @@
         </div>
     
     </article>
+
+    <section class="socials-copyright">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="social-container">
+                            <span class="fa-stack">
+                                <a href="https://github.com/SamAddy">
+                                    <i class="fab fa-github fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                    <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://twitter.com/Prof_Addy">
+                                    <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.youtube.com/@profaddy">
+                                    <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                </a>
+                            </span>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+
+
+         <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </section>
 
 
 
