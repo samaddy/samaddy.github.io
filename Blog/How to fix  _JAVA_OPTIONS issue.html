@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="How to fix  _JAVA_OPTIONS">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison - Website" />
+    <meta property="og:title" content="Samuel K. Addison" />
+    <meta property="og:description" content="Cyber Security Engineer" />
+    <meta property="og:image" content="/images/smiles.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://samaddy.github.io/">
+
+    <title>How to fix  _JAVA_OPTIONS | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+       
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .screenshot img {
+                max-width: 100%;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <section>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </section>
+
+    <article class="blog">
+        <div class="caption">
+            <time datetime="2023-03-23">Thursday, March 23, 2023</time>
+            <h1>How to fix  _JAVA_OPTIONS issue</h1>
+        </div>
+    
+        <div class="content">
+            <p>
+                Are you encountering the "java.lang.UnsupportedClassVersionError" error when trying to run Burp Suite or any other application on your machine? 
+                In this blog post, we will discuss how to update Java on Kali Linux to fix the "UnsupportedClassVersionError" error.
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/java_options.png" alt="nmap result">
+                <p>Java class version error </p>
+            </div>
+
+            <p>
+                The error message suggests that the version of the Java Runtime Environment (JRE) installed on your system is older than the version in which the burp.StartBurp class was compiled.
+                To fix this issue, you can try updating your JRE to a newer version that supports class file version 61.0. You can download the latest version of JRE from the official Oracle website.
+                If updating the JRE is not an option, you can try using an older version of Burp Suite that is compatible with your current JRE version. Alternatively, 
+                you can compile the burp.StartBurp class using a compatible version of the Java compiler and then try running it again.
+            </p>
+
+            <p>
+                Another possible solution is to set the Java version explicitly for the Burp Suite application. 
+                To do this, open the command prompt and navigate to the Burp Suite installation directory. Then, run the following command:
+            </p>
+
+            <pre>
+                <code class="language-bash">
+                    java -jar -Djdk.version=1.8 burpsuite.jar
+                </code>
+            </pre>
+
+            <p>
+                To update Java on Kali Linux, follow these steps:
+            </p>
+
+            <p>
+                <span>Step 1</span>: Open a Terminal window on your Kali Linux system.
+            </p>
+
+            <p>
+                <span>Step 2</span>: Update the package lists by running the following command:
+            </p>
+
+            <pre><code class="language-bash">
+                sudo apt update
+            </code></pre>
+
+            <p>
+                <span>Step 3</span>: Install the latest version of Java by running the following command:
+            </p>
+
+            <pre><code class="language-bash">
+                sudo apt install default-jdk
+            </code></pre>
+
+            <p>
+                <span>Step 4</span>: After the installation is complete, you can check the version of Java installed by running the following command:
+            </p>
+
+            <pre><code class="language-bash">
+                java -version
+            </code></pre>
+
+            <p>
+                This should display the version of Java installed on your system.
+            </p>
+
+            <p>
+                If you want to install a specific version of Java, you can do so by replacing "default-jdk" with the appropriate package name, 
+                such as "openjdk-8-jdk" or "openjdk-11-jdk". You can also install the JRE instead of the JDK by replacing "default-jdk" with "default-jre".
+            </p>
+
+            <p>
+                Once you have updated Java, you should be able to run Burp Suite without encountering the "UnsupportedClassVersionError" error.
+            </p>
+            
+            <h2>Conclusion</h2>
+            
+            <p>
+                In conclusion, updating Java on Kali Linux can resolve the "java.lang.UnsupportedClassVersionError" error when running Burp Suite. 
+                By following the simple steps outlined in this blog post, you can update Java on your Kali Linux system and ensure that your Burp Suite 
+                installation is running smoothly.
+            </p>
+    
+    </article>
+
+    <section class="socials-copyright">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="social-container">
+                            <span class="fa-stack">
+                                <a href="https://github.com/SamAddy">
+                                    <i class="fab fa-github fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                    <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://twitter.com/Prof_Addy">
+                                    <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.youtube.com/@profaddy">
+                                    <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                </a>
+                            </span>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+
+
+         <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </section>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
