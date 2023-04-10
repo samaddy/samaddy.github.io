@@ -40,6 +40,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="/script.js"></script>
 
     <style>
         body {
@@ -319,6 +321,17 @@
             </div>
     </section>
 
+    <section class="cipher-decoding">
+        <div class="cipher-container">
+            <h2>
+                Decrypt the cipher text below and see magic happen
+            </h2>
+            <p class="cipher-text">Ruvdslknl pz wvdly</p>
+            <input type="text" id="cipher-input" placeholder="Your answer">
+            <button id="cipher-btn" type="submit">Submit</button>
+        </div>
+    </section>
+
     <section class="socials-copyright">
         <div class="footer">
             <div class="container">
@@ -367,15 +380,53 @@
         const cipherBtn = document.getElementById("cipher-btn");
         const cipherInput = document.getElementById("cipher-input");
         const cipherText = document.querySelector(".cipher-text");
-        const confettiContainer = document.getElementById("confetti-container");
 
-        cipherBtn.addEventListener("click", function() {
-        if (cipherInput.value.toLowerCase() === "knowledge is power") {
-            cipherText.innerHTML = "Correct!";
-            confettiContainer.style.display = "block";
-        } else {
-            cipherText.innerHTML = "Incorrect answer, try again.";
-        }
+
+        cipherBtn.addEventListener("click", function (event) {
+            const userInput = cipherInput.value.trim();
+
+            if (!userInput) {
+                return;
+            }
+
+            if (userInput.toLowerCase() === "knowledge is power") {
+                cipherText.innerHTML = "That is Correct!";
+                event.preventDefault();
+
+
+                const duration = 2 * 1000;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 100,
+                        startVelocity: 30,
+                        spread: 360,
+                        origin: {
+                            x: Math.random(),
+                            y: Math.random()
+                        }
+                    });
+
+                    // keep going until we are out of time
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+
+                setTimeout(function () {
+                    cipherText.innerHTML = "Sfnfou Pm Tifwf";
+                }, 5000)
+            }
+
+            else {
+                cipherText.innerHTML = "Incorrect answer, try again.";
+                setTimeout(function () {
+                    cipherText.innerHTML = "Sfnfou Pm Tifwf";
+                }, 3000)
+            }
+
+            cipherInput.value = '';
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
