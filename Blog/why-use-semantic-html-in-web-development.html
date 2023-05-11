@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Why use Semantic HTML in web Development?">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison - Website" />
+    <meta property="og:title" content="Mastering Django" />
+    <meta property="og:description" content="Cyber Security Engineer writes about Semantic HTML in web development." />
+    <meta property="og:image" content="https://github.com/SamAddy/samaddy.github.io/raw/main/images/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://samaddy.github.io/Blog/Mastering-django.html">
+
+    <title>Why use Semantic HTML in web Development? | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+        }
+
+        ol li {
+            font-weight: bolder;
+            margin-top: 10px;
+
+        }
+
+        ol span {
+            font-weight: normal;
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .screenshot img {
+                max-width: 100%;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <header>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </header>
+    <main>
+        <article class="blog">
+            <div class="caption">
+                <time datetime="2023-01-10">Tuesday, January 10, 2022</time>
+                <h1>Why use Semantic HTML in web Development?</h1>
+            </div>
+            <div class="content">
+                <p>
+                    Semantic HTML refers to the use of HTML elements that convey meaning beyond just the visual presentation of the content. Using Semantic HTML can have a significant impact on the accessibility, maintainability, and search engine optimization (SEO) of your website. In this blog post, we will explore why web developers need to use Semantic HTML in web development, and provide some best practices and sources for implementing it.
+                </p>
+                <h2>Accessibility</h2>
+                <p>
+                    One of the most significant reasons for using Semantic HTML is to improve the accessibility of your website. Using Semantic HTML makes it easier for screen readers and other assistive technologies to understand the content of your website. This is because Semantic HTML provides a clear structure and hierarchy to the content, allowing assistive technologies to navigate and read the content more easily.
+                </p>
+                <h2>Maintainability</h2>
+                <p>
+                    Another reason to use Semantic HTML is that it can make your code more maintainable. Semantic HTML provides a clear and consistent structure to your code, making it easier to read and understand. This can make it easier to maintain and update your website over time, as it can be more straightforward to identify and modify specific elements.
+                </p>
+                <h2>SEO</h2>
+                <p>
+                    Using Semantic HTML can also have a positive impact on your website's SEO. Search engines use the content and structure of your website to determine its relevance and ranking. By using Semantic HTML, you can provide search engines with a clear and structured understanding of your content, which can help to improve your website's visibility and ranking.
+                </p>
+                <h2>Best Practices</h2>
+                <p>
+                    Here are some best practices for using Semantic HTML in your web development projects:
+                </p>
+                <ol>
+                    <li>Use the appropriate HTML element for each type of content, such as 
+                        <code>&lt;header&gt;</code>, 
+                        <code>&lt;nav &gt;</code>, 
+                        <code>&lt;main&gt;</code>, 
+                        <code>&lt;article&gt;</code>, 
+                        <code>&lt;section&gt;</code>, 
+                        <code>&lt;aside&gt;</code>, and 
+                        <code>&lt;footer&gt;</code>.
+                    </li>
+                    <li>
+                        Use headings (<code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>) to provide a clear hierarchy of content.
+                    </li>
+                    <li>
+                        Use lists (<code>&lt;ul&gt;</code> and <code>&lt;ol&gt;</code>) to group related content.
+                    </li>
+                    <li>
+                        Use semantic HTML5 elements like 
+                        <code>&lt;header&gt;</code>, 
+                        <code>&lt;nav&gt;</code>, 
+                        <code>&lt;main&gt;</code>, 
+                        <code>&lt;article&gt;</code>, 
+                        <code>&lt;section&gt;</code>, 
+                        <code>&lt;aside&gt;</code>, and 
+                        <code>&lt;footer&gt;</code>
+                        whenever possible.
+                    </li>
+                </ol>
+                <h2>Conclusion</h2>
+                <p>
+                    In conclusion, using Semantic HTML is an essential part of web development. It can significantly improve the accessibility, maintainability, and SEO of your website. By following best practices and leveraging available resources, web developers can create more accessible, maintainable, and search engine-friendly websites.
+                </p>
+                <h2>References</h2>
+                <div class="reference">
+                    <ul>
+                        <li>
+                            <a href="https://developer.mozilla.org/en-US/docs/Glossary/Semantics#Semantics_in_HTML">MDN Web Docs</a>
+                        </li>
+                        <li>
+                            <a href="https://www.w3.org/TR/html52/semantics.html">W3C HTML Specifications</a>
+                        </li>
+                        <li>
+                            <a href="https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/the-basics-of-safely-using-html-semantics">Google Web Fundamentals</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </main>
+    <footer>
+        <section class="socials-copyright">
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="social-container">
+                                <span class="fa-stack">
+                                    <a href="https://github.com/SamAddy">
+                                        <i class="fab fa-github fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                        <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://twitter.com/Prof_Addy">
+                                        <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.youtube.com/@profaddy">
+                                        <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+             <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </section>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
