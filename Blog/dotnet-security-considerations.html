@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Cyber Security Engineer">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison | Cyber Security Engineer " />
+    <meta property="og:title" content=".NET Security Considerations" />
+    <meta property="og:description" content="Cyber Security Engineer writes about .NET Security Considerations." />
+    <meta property="og:image" content="https://github.com/SamAddy/samaddy.github.io/blob/main/Blog/Images/anchorblog.png?raw=true" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://samaddy.github.io/Blog/dotnet-security-considerations.html">
+
+
+    <title>.NET Security Considerations | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <!-- Google tag (gtag.js) -->
+    
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2, h4 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+        
+        .blog img {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+       
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+            code {
+                max-width: 100%;
+            }
+            .screenshot img {
+                max-width: 100%;
+            }
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <header>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </header>
+    <main>
+        <article class="blog">
+            <div class="caption">
+                <time datetime="2023-06-07">Wednesday, June 07, 2023</time>
+                <h1>.NET Security Considerations</h1>
+            </div>
+            <img src="Images/dotnet-framework-security.jpeg" alt=".NET Security Considerations">
+            <div class="content">
+                <p>
+                    When it comes to developing software applications, security should always be a top priority. In the case of .NET development, it is no different. .NET offers a robust development platform, and within it, the C# programming language plays a significant role. However, it's essential to recognize that C# development in the .NET ecosystem also requires careful attention to security considerations. In my recent exploration of .NET development, I have come to appreciate the importance of incorporating strong security measures into .NET applications. In this blog, we will explore some of the most important security considerations that developers should keep in mind when working with .NET.
+                </p>
+                <h2>Input Validation</h2>
+                <p>
+                    One of the most common security vulnerabilities in any software application is improper input validation. This occurs when an application does not properly filter or sanitize user input, which can lead to a variety of security issues, such as SQL injection attacks, cross-site scripting (XSS) attacks, and buffer overflows.
+                </p>
+                <p>
+                    To prevent these types of attacks, it is important to always validate and sanitize user input. C# offers a variety of built-in functions and libraries that can help with input validation, such as the Regex class and the HttpUtility.HtmlEncode method. Here's an example of how to validate user input in C#:
+                </p>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-c#">
+                        string userInput = Request.Form["username"];
+                        string sanitizedInput = SanitizeInput(userInput);
+    
+                        // Sanitization function to prevent XSS attacks
+                        public string SanitizeInput(string input)
+                        {
+                            // Implement proper sanitization logic here
+                            // ...
+                            return sanitizedInput;
+                        }
+                    </code></pre>
+                </div>
+                <h2>Secure Authentication and Authorization</h2>
+                <P>
+                    It is essential to have secure authentication and authorization procedures to protect user identities and prevent illegal access. To enforce robust password hashing, secure session management, and role-based access control (RBAC), use built-in.NET capabilities such as 
+                    <a href="https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/code-access-security" target="_blank" rel="noopener noreferrer">
+                        ASP.NET Identity
+                    </a>
+                    , 
+                    IdentityServer, or OpenID Connect.
+                </P>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-c#">
+                        // Authenticating a user
+                        bool isAuthenticated = await userManager.CheckPasswordAsync(user, password);
+                        if (isAuthenticated)
+                        {
+                            // Grant access to authorized resources
+                        }
+                        else
+                        {
+                            // Handle authentication failure
+                        }
+                    </code></pre>
+                </div>
+                <h2>Encryption and Hashing</h2>
+                <p>
+                    Encryption and hashing are two important security techniques that can be used to protect sensitive data. Encryption involves converting data into an unreadable format, while hashing involves converting data into a fixed-length value that cannot be reversed. In .NET, developers can use the built-in System.Security.Cryptography namespace to implement encryption and hashing.
+                </p>
+                <h2>Secure Data Communication</h2>
+                <p>
+                    Secure communication is important when transmitting sensitive data over the internet to prevent eavesdropping and data tampering. In .NET, developers can use the built-in System.Net.Security namespace to implement secure communication using SSL/TLS protocols. Here's an example of how to use SSL/TLS in .NET applications:
+                </p>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-c#">
+                        TcpClient client = new TcpClient("example.com", 443);
+                        SslStream sslStream = new SslStream(client.GetStream(), false);
+                        sslStream.AuthenticateAsClient("example.com");
+                    </code></pre>
+                </div>
+                <h2>Handling Sensitive Data</h2>
+                <p>
+                    Maintaining confidentiality and integrity requires proper handling of sensitive data. Encrypt sensitive data with industry-standard methods, securely store secrets with Azure Key Vault or equivalent solutions, and adhere to best practices for security logging, data masking, and regulatory compliance.
+                </p>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-c#">
+                        // Encrypting and decrypting sensitive data
+                        string encryptedData = EncryptionHelper.Encrypt(data, encryptionKey);
+                        string decryptedData = EncryptionHelper.Decrypt(encryptedData, encryptionKey);
+
+                        // Securely storing and retrieving secrets
+                        string connectionString = KeyVault.GetSecret("DatabaseConnectionString");
+                    </code></pre>
+                </div>
+                <h2>Denial of Service (DoS) Prevention</h2>
+                <p>
+                    Denial of Service (DoS) attacks are designed to disrupt the normal functioning of a system by overwhelming it with requests or traffic. Developers can use techniques like rate limiting and throttling to prevent DoS attacks.
+                </p>
+                <p>
+                    Rate limiting involves limiting the number of requests that can be made to a system within a certain period of time. Throttling involves slowing down the rate at which requests are processed, in order to prevent the system from being overwhelmed. Here's an example of how to implement rate limiting in .NET applictions:
+                </p>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-c#">
+                        public class RateLimiter
+                        {
+                            private readonly int _maxRequests;
+                            private readonly TimeSpan _timeSpan;
+                            private readonly Dictionary<string, List<DateTime>> _requests;
+
+                            public RateLimiter(int maxRequests, TimeSpan timeSpan)
+                            {
+                                _maxRequests = maxRequests;
+                                _timeSpan = timeSpan;
+                                _requests = new Dictionary<string, List<DateTime>>();
+                            }
+
+                            public bool CanMakeRequest(string ipAddress)
+                            {
+                                if (!_requests.ContainsKey(ipAddress))
+                                {
+                                    _requests[ipAddress] = new List<DateTime>();
+                                }
+
+                                var requestsForIp = _requests[ipAddress];
+                                requestsForIp.RemoveAll(t => t < DateTime.Now.Subtract(_timeSpan));
+                                if (requestsForIp.Count >= _maxRequests)
+                                {
+                                    return false;
+                                }
+
+                                requestsForIp.Add(DateTime.Now);
+                                return true;
+                            }
+                        }
+                    </code></pre>
+                </div>
+                <h2>Conclusion</h2>
+                <p>
+                    In conclusion, security is an essential aspect of software development. Developers should always be aware of the potential security vulnerabilities and take appropriate measures to prevent them. By following best practices for input validation, encryption and hashing, secure communication, and DoS prevention, developers can create secure and reliable software applications. Secure your .NET applications and build with confidence!
+                </p>
+        </article>
+    </main>
+    <footer>
+        <section class="socials-copyright">
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="social-container">
+                                <span class="fa-stack">
+                                    <a href="https://github.com/SamAddy">
+                                        <i class="fab fa-github fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                        <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://twitter.com/Prof_Addy">
+                                        <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.youtube.com/@profaddy">
+                                        <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+             <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </section>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
