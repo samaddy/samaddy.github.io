@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Cyber Security Engineer">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison | Cyber Security Engineer " />
+    <meta property="og:title" content="Securing Containerized FastAPI Web App on Azure" />
+    <meta property="og:description" content="Cyber Security Engineer writes about Securing Containerized FastAPI Web App on Azure." />
+    <meta property="og:image" content="https://github.com/SamAddy/samaddy.github.io/blob/main/Blog/Images/anchorblog.png?raw=true" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://samaddy.github.io/Blog/securing-containerized-fastapi-web-app-on-azure.html">
+
+
+    <title>Securing Containerized FastAPI Web App on Azure | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <!-- Google tag (gtag.js) -->
+    
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2, h4 h3{
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+
+        blockquote {
+            border-left: #e41010;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+        
+        .blog img {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+       
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+            code {
+                max-width: 100%;
+            }
+            .screenshot img {
+                max-width: 100%;
+            }
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <header>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </header>
+    <main>
+        <article class="blog">
+            <div class="caption">
+                <time datetime="2023-06-07">Tuesday, April 02, 2024</time>
+                <h1>Securing Containerized FastAPI Web App on Azure</h1>
+            </div>
+            <img src="Images/azure_containers_security.png" alt="Azure containers Security">
+            <div class="content">
+                <p>
+                    Starting a new project is always thrilling, especially when you get to explore new technologies. 
+                    Recently, I had the chance to work with containers for a personal project hosted on Azure. 
+                    It was an exciting opportunity to dive into this technology that's transforming how we develop, 
+                    deploy, and manage applications. Containers offer a lightweight and efficient way to run software 
+                    in isolated environments, but they also come with important security considerations. 
+                    In this blog post, I'll share my experience integrating containers into my project and the 
+                    security measures I implemented to protect my workflow.
+                </p>
+                <h2>What are containers?</h2>
+                <p>
+                    According to Docker, 
+                    <blockquote>
+                        A container is a standardized unit of software that packages up code and 
+                        all its dependencies, ensuring that the application runs quickly and reliably across different 
+                        computing environments. A Docker container image is a lightweight, standalone, executable package 
+                        that includes everything needed to run an application: code, runtime, system tools, system libraries, 
+                        and settings.
+                    </blockquote>
+                </p>
+                <p>
+                    I chose containers for my project because they had a smoother and more efficient setup as compared to 
+                    virtual machines (VMs). Due to this, I could simply package the application together with related 
+                    dependencies and deployment became much easier. Besides, I wanted to improve on my container 
+                    deployment skills in the cloud, and using Docker containers on Azure provided an excellent 
+                    opportunity to achieve this.
+                </p>
+                <h2>Setting Up Containers On Azure</h2>
+                <P>
+                    To move my FastAPI-based REST API to the cloud and make it accessible to everyone, I decided to 
+                    use Azure services for deployment and Docker for containerization. Here's a detailed explanation 
+                    of how I configured containers on Azure:
+                </P>
+                <h3>Step 1: Build the Docker Container</h3>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-bash">
+                        # Use the official Python image from the Docker Hub
+                        FROM python:3.11-slim
+                        
+                        # Set the working directory
+                        WORKDIR /code
+
+                        # Copy the requirements file
+                        COPY requirements.txt .
+
+                        # Install the dependencies
+                        RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+                        # Copy the rest of the application code
+                        COPY . .
+
+                        # Run test on the app
+                        RUN python -m pytest tests
+
+                        # Expose the port the app runs on
+                        EXPOSE 3100
+
+                        # Command to run the application
+                        CMD ["gunicorn", "delivery_fee_calculator.main:app"]
+                    </code></pre>
+                </div>
+                <h3>Step 2: Setting Up Azure Container Registry (ACR)</h3>
+                <p>To store and manage my Docker images, I set up an Azure Container Registry (ACR). 
+                    Here are the steps I followed:
+                </p>
+                <ol>
+                    <li> I created an ACR instance using the Azure CLI.</li>
+                    <div class="code-snippet">
+                        <div class="copy-code">&#x1F4CB;</div>
+                        <pre><code class="language-bash">
+                            az acr create --resource-group myResourceGroup --name myACR --sku Basic
+                        </code></pre>
+                    </div>
+                    <li>I logged in to my ACR instance.</li>
+                    <div class="code-snippet">
+                        <div class="copy-code">&#x1F4CB;</div>
+                        <pre><code class="language-bash">
+                            az acr login --name myACR
+                        </code></pre>
+                    </div>
+                    <li>I tagged my local Docker image and pushed it to ACR.</li>
+                    <div class="code-snippet">
+                        <div class="copy-code">&#x1F4CB;</div>
+                        <pre><code class="language-bash">
+                            docker tag playground-fastapi myACR.azurecr.io/playground-fastapi:latest
+                            docker push myACR.azurecr.io/playground-fastapi:latest
+                        </code></pre>
+                    </div>
+                </ol>
+                <h3>Step 3: Setting Up Azure Service Principal</h3>
+                <p>To automate deployment and manage access, I created an Azure Service Principal:</p>
+                <p>A lil talk about Service Principal: Service Principals are vital for developers aiming to securely 
+                    manage and automate access to Azure resources. Instead of using a developer's account or creating 
+                    individual entities, Service Principals offer a dedicated identity for applications and automated 
+                    tools, keeping sensitive credentials safe. This method improves security by following the principle 
+                    of least privilege, allowing developers to assign specific roles and permissions that restrict access 
+                    to only necessary resources. Additionally, Service Principals simplify the automation process, making 
+                    it easier to handle deployments and maintain consistency across environments. Regularly rotating credentials 
+                    and monitoring activity help developers uphold strong security practices while seamlessly integrating with 
+                    Azure services.
+                </p>
+                <div class="code-snippet">
+                    <div class="copy-code">&#x1F4CB;</div>
+                    <pre><code class="language-bash">
+                        az ad sp create-for-rbac --name myServicePrincipal --role contributor --scopes /subscriptions/{subscription-id}/resourceGroups/myResourceGroup
+                    </code></pre>
+                </div>
+                <h3>Step 4: Deploying the Container to Azure Web App</h3>
+                <p>
+                    Finally, I deployed the Docker container to Azure, making it accessible to everyone. 
+                    It can be viewed <a href="https://samaddyplayground.azurewebsites.net/" target="_blank" rel="noopener noreferrer">here</a>.
+                </p>
+                <h2>Implementing Security Measures</h2>
+                <p>
+                    To protect sensitive data, I avoided hardcoding passwords and API keys in the source code. 
+                    Instead, I used GitHub Actions secrets to store and manage these values. This kept sensitive 
+                    information encrypted and only accessible by the necessary GitHub workflows. By setting up 
+                    environment variables in GitHub, I kept credentials out of the version control system, 
+                    lowering the risk of accidental exposure. I also used Azure Key Vault for managing secrets. 
+                    It offers a secure way to store and access secrets, keys, and certificates. Integrating 
+                    Key Vault with my deployment process ensured that sensitive information was retrieved safely 
+                    at runtime. For container security, I built Docker images from official base images and kept 
+                    them updated with the latest security patches. Regular scans of the images helped identify 
+                    and address potential security issues early in development.
+                </p>
+            
+                <h2>Challenges and solutions</h2>
+                <p>
+                    While deploying my FastAPI project to Azure using containers, I faced several challenges 
+                    that required debugging and problem-solving. One major issue was authentication when pushing 
+                    the tagged Docker image to Azure Container Registry (ACR). 
+                    I received an "unauthorized: authentication required" error because I hadn't logged into 
+                    the registry before the push. Despite the service principal having the AcrPush role, access 
+                    was denied. To fix this, I logged into the registry using the Azure CLI before pushing. 
+                    The Azure Docker Login GitHub Action also helped manage this process smoothly. 
+                </p>
+                <p>
+                    Another challenge occurred during deployment to Azure App Service. 
+                    I encountered an error: "The client {client_id} does not 
+                    have authorization to perform action 'Microsoft.Web/sites/config/list/action'." 
+                    This was because the service principal lacked the necessary role to modify the 
+                    app service configuration. Initially, it had the AcrPush role, which was insufficient. 
+                    I updated the service principal's role to Contributor, granting the needed permissions 
+                    for deployment tasks like updating app settings and deploying the container image. 
+                    I also dealt with image-building and network-related challenges. 
+                    Ensuring Docker images were correctly built and tagged, and adhered to best practices, 
+                    required careful attention. Network configuration, especially setting up private endpoints 
+                    for secure access, added complexity that needed to be addressed for a secure and reliable deployment. 
+                </p>
+                <p>
+                    By systematically addressing these challenges and using Azure’s tools and best practices, 
+                    I successfully deployed my FastAPI project to Azure. These experiences enhanced my understanding 
+                    of Azure's capabilities and improved my skills in managing containerized applications and 
+                    cloud deployments. This version is more concise and avoids cliches, focusing on the key points and solutions.
+                </p>              
+                <h2>Conclusion</h2>
+                <p>
+                    Deploying my FastAPI project to Azure using containers was eye-opening. It taught me a lot about 
+                    cloud services and containerization. I learned how to secure deployments, set up CI/CD pipelines, 
+                    and tackle technical hurdles along the way. Azure's tools were a big help. I used them to create 
+                    a solid, scalable setup for my app. The process wasn't always smooth, but each problem I solved 
+                    improved my skills. This project gave me hands-on experience with cloud development. It's definitely 
+                    changed how I'll approach future projects. I feel much more confident working with containers and 
+                    cloud services now. Overall, it was a challenging but rewarding experience. I'm excited to apply 
+                    what I've learned to my next cloud-based project.
+                </p>
+                <h2>References</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.docker.com/resources/what-container/" target="_blank" rel="noopener noreferrer">
+                            What is a Container?
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://azure.microsoft.com/en-us/products/container-registry/" target="_blank" rel="noopener noreferrer">
+                            Azure Container Registry
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=browser" target="_blank" rel="noopener noreferrer">
+                            Azure Service Principal
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://learn.microsoft.com/en-us/azure/developer/python/tutorial-containerize-simple-web-app-for-app-service?tabs=web-app-flask" target="_blank" rel="noopener noreferrer">
+                            Deploy a containerized Flask or FastAPI web app on Azure App Service
+                        </a>
+                    </li>
+                </ul>
+        </article>
+    </main>
+    <footer>
+        <section class="socials-copyright">
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="social-container">
+                                <span class="fa-stack">
+                                    <a href="https://github.com/SamAddy">
+                                        <i class="fab fa-github fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                        <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://twitter.com/Prof_Addy">
+                                        <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.youtube.com/@profaddy">
+                                        <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+             <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </section>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
