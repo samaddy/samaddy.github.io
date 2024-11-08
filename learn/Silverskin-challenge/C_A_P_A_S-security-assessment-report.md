@@ -1,10 +1,80 @@
 # Secuirty Assessment Report
+- Assessment Conducted By: Samuel Kwaku Addison
+- Assessment Date: 4th - 8th November, 2024
 
 ## Table of Contents
 
 - [Executive Summary](#executive-summary)
 - [Scope of Assessment](#scope-of-assessment)
-
+- [Summary of Findings](#summary-of-findings)
+- [Detailed Findings](detailed-findings)
+    - [Directory Traversal to Access Sensitive Files](#directory-traversal-to-access-sensitive-files)
+        - [Description](#description)
+        - [Severity](#severity)
+        - [Impact in Business Context](#impact-in-business-context)
+        - [Evidence](#evidence)
+        - [Steps to Reproduce](#steps-to-reproduce)
+    - [Improper JWT Handling and Token Management](#improper-jwt-handling-and-token-management)
+        - [Description](#description-1)
+        - [Severity](#severity-1)
+        - [Impact in Business Context](#impact-in-business-context-1)
+        - [Evidence](#evidence-1)
+        - [Steps to Reproduce](#steps-to-reproduce-1)
+    - [Mass Assignment Vulnerability in User Role Creation](#mass-assignment-vulnerability-in-user-role-creation)
+        - [Description](#description-2)
+        - [Severity](#severity-2)
+        - [Impact in Business Context](#impact-in-business-context-2)
+        - [Evidence](#evidence-2)
+        - [Steps to Reproduce](#steps-to-reproduce-2)
+    - [Insecure Direct Object Reference (IDOR) / Insufficient Access Control](#insecure-direct-object-reference-(idor)-/-insufficient-access-control)
+        - [Description](#description-3)
+        - [Severity](#severity-3)
+        - [Impact in Business Context](#impact-in-business-context-3)
+        - [Evidence](#evidence-3)
+        - [Steps to Reproduce](#steps-to-reproduce-3)
+    - [Reflected Cross-Site Scripting (XSS) Leading to Denial of Service (DoS)](#reflected-cross-site-scripting-(xss)-leading-to-denial-of-service-(dos))
+        - [Description](#description-4)
+        - [Severity](#severity-4)
+        - [Impact in Business Context](#impact-in-business-context-4)
+        - [Evidence](#evidence-4)
+        - [Steps to Reproduce](#steps-to-reproduce-4)
+    - [User Enumeration vai Password Reset](#user-enumeration-vai-password-reset)
+        - [Description](#description-5)
+        - [Severity](#severity-5)
+        - [Impact in Business Context](#impact-in-business-context-5)
+        - [Evidence](#evidence-5)
+        - [Steps to Reproduce](#steps-to-reproduce-5)
+    - [Verbose Error Handling in Authentication Endpoint](#verbose-error-handling-in-authentication-endpoint)
+        - [Description](#description-6)
+        - [Severity](#severity-6)
+        - [Impact in Business Context](#impact-in-business-context-6)
+        - [Evidence](#evidence-6)
+        - [Steps to Reproduce](#steps-to-reproduce-6)
+    - [Cross-Origin Resource Sharing (CORS) Misconfiguration](#cross-origin-resource-sharing-cors-misconfiguration)
+        - [Description](#description-7)
+        - [Severity](#severity-7)
+        - [Impact in Business Context](#impact-in-business-context-7)
+        - [Evidence](#evidence-7)
+        - [Steps to Reproduce](#steps-to-reproduce-7)
+    - [Lack of Brute-Force Protection on Authentication Endpoints](#lack-of-brute-force-protection-on-authentication-endpoints)
+        - [Description](#description-8)
+        - [Severity](#severity-8)
+        - [Impact in Business Context](#impact-in-business-context-8)
+        - [Evidence](#evidence-8)
+        - [Steps to Reproduce](#steps-to-reproduce-8)
+    - [Insecure Access Control to Admin Resource](#insecure-access-control-to-admin-resource)
+        - [Description](#description-9)
+        - [Severity](#severity-9)
+        - [Impact in Business Context](#impact-in-business-context-9)
+        - [Evidence](#evidence-9)
+        - [Steps to Reproduce](#steps-to-reproduce-9)
+    - [Weak Application ID Enumeration – Predictable Application ID](#weak-application-id-enumeration--predictable-application-id)
+        - [Description](#description-10)
+        - [Severity](#severity-10)
+        - [Impact in Business Context](#impact-in-business-context-10)
+        - [Evidence](#evidence-10)
+        - [Steps to Reproduce](#steps-to-reproduce-10)
+- [Conclusion](#conclusion)
 
 ## Executive Summary
 
@@ -21,7 +91,7 @@ The results of the assessment reveal critical vulnerabilities impacting user pri
 
 The scope of this security assessment focused on evaluating the security posture of a newly developed web application. The objectives were to identify potential vulnerabilities in the application’s user functionalities, backend services, and any accessible endpoints, prioritizing issues that could impact the confidentiality, integrity, or availability of user data.
 
-Testing was conducted on a virtual machine (VM) environment accessible via the IP address configured by the assessor. The primary application endpoint was accessed at http://<your.vm.ip.address>:3001, and interactions with background services and APIs were explored within this environment.
+Testing was conducted on a virtual machine (VM) environment accessible via the IP address configured by the assessor. The primary application endpoint was accessed at http://<your.vm.ip.address>:3001, and interactions with background services and APIs were explored within this environment. These are the user accounts that were provided.
 
 | User Role      | Email                  | Password 
 | :------------- | :--------------------  | :----------------------|
@@ -30,23 +100,46 @@ Testing was conducted on a virtual machine (VM) environment accessible via the I
 | Admin          | test3@silverskin.fi    | I4m4admin----          |
 
 
+
+## Summary of Findings
+During the security assessment of the C.A.P.A.S. (Cyber Attack Permission Application System), several critical vulnerabilities were discovered that pose significant risks to the integrity, confidentiality, and availability of the application and its data. Below is a summary of the key vulnerabilities identified:
+
+1. Directory Traversal to Access Sensitive Files: The application is vulnerable to directory traversal attacks, which allows unauthorized users to access sensitive files outside the web root directory. This could expose application secrets, configuration files, and potentially compromise the security of the entire system.
+
+2. Improper JWT Handling and Token Management: Weaknesses were found in the handling of JSON Web Tokens (JWT). These include the use of a weak signing key, improper token expiration handling, and the potential for token replay. Attackers could exploit these weaknesses to impersonate users, bypass authentication, and gain unauthorized access to application resources.
+
+3. Mass Assignment Vulnerability in User Role Creation: The application fails to properly validate user inputs, specifically during user registration. Attackers can exploit this by adding a "role" field to the registration payload. This significantly compromises access control and user management.
+
+4. Reflected Cross-Site Scripting (XSS) Leading to Denial of Service (DoS): Reflected XSS vulnerabilities were found in the feedback submission feature. By injecting malicious JavaScript, an attacker could cause a Denial of Service (DoS) condition, disrupting the feedback management interface and potentially leading to further security risks.
+
+5. User Enumeration via Password Reset: TThe application reveals if an email exists during the password reset process, allowing attackers to confirm the existence of user accounts. This facilitates targeted attacks, such as phishing or brute-force attempts on identified users.
+
+6. Verbose Error Handling in Authentication Endpoint: The authentication endpoint reveals sensitive information in error messages, including stack traces and function details. This exposes implementation details and provides attackers with valuable information to fine-tune their attacks, including methods for bypassing authentication.
+
+7. Lack of Brute-Force Protection on Authentication Endpoints: There is no protection against brute-force attacks on the authentication endpoints. Attackers can perform unlimited login attempts, which could allow them to guess user passwords and gain unauthorized access.
+
+8. Insecure Access Control to Admin Resource: Regular users and reviewers were able to access the /service-dashboard endpoint, which should be restricted to administrators. Although this page does not contain highly sensitive data, it provides insight into running jobs and could be useful for attackers looking to gather information or exploit other vulnerabilities.
+
+9. Weak Application ID Enumeration – Predictable Application ID: The application uses predictable patterns for application IDs, allowing attackers to enumerate IDs and access other users' data by manipulating specific portions of the ID in automated attacks.
+
+
 ## Detailed Findings 
 
-#### Directory Traversal to Access Sensitive Files
+### Directory Traversal to Access Sensitive Files
 
-##### Description
+#### Description
 A directory traversal vulnerability was identified in the /v1/static/ path, where an attacker can exploit path manipulation techniques to access sensitive files outside the intended directory. Specifically, by crafting a request to the URL 
 `http://192.168.72.128:3000/v1/static/\..\..\..\..\..\..\..\..\..\etc\passwd`,
 
 the attacker was able to retrieve the contents of the /etc/passwd file, which contains sensitive information about user accounts on the server.
 
-##### Severity 
+#### Severity 
 High
 
 ##### Impact in Business Context
 This vulnerability poses a significant security risk as it allows attackers to gain access to sensitive system files. The /etc/passwd file contains critical information about user accounts, including usernames, and system configuration details. If this file is exposed, attackers could potentially perform further enumeration, privilege escalation, or other attacks targeting system users. In the context of C.A.P.A.S., which handles sensitive attack submission details, this vulnerability could lead to unauthorized access to administrative credentials or system configurations, jeopardizing the confidentiality and integrity of user data.
 
-###### Evidence
+#### Evidence
 - Request
     ```json
     GET /v1/static/..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd HTTP/1.1
@@ -95,7 +188,7 @@ This vulnerability poses a significant security risk as it allows attackers to g
 
 ![etc-passwd-file](Evidence/etc-passwd-file.png)
 
-##### Steps to reproduce
+#### Steps to reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Send the following HTTP request to the `/v1/static/` path:
@@ -107,18 +200,18 @@ To reproduce the vulnerability, one has to perform the following steps.
 
 
 
-#### Improper JWT Handling and Token Management
+### Improper JWT Handling and Token Management
 
-##### Description
+#### Description
 The application’s handling of JSON Web Tokens (JWTs) has several critical flaws related to token secret management, expiration, and reuse, potentially allowing unauthorized access or persistent sessions. These issues undermine session security and could be exploited to escalate privileges, impersonate users, or maintain access indefinitely.
 
-##### Severity
+#### Severity
 High
 
-##### Impact in Business Context
+#### Impact in Business Context
 The weakness in the handling of JWT tokens could allow an attacker to perform a variety of malicious actions, with critical implications for the integrity of the application. Since the JWT secret is weak, an attacker could forge or modify the token, especially the exp (expiration) field, to bypass token expiration mechanisms. This would allow the attacker to maintain session access beyond the intended period, granting them prolonged unauthorized access. Furthermore, the weak secret could enable attackers to generate their own tokens, effectively creating a backdoor to access resources that would otherwise be restricted. With the ability to craft their own tokens, an attacker could potentially gain access to sensitive information or perform unauthorized actions, such as accessing feedback or user data, or even performing privileged actions without legitimate authorization. This compromises both data confidentiality and the integrity of the application, making the vulnerability a critical concern for the business.
 
-##### Evidence
+#### Evidence
 - Cracking of JWT secret
 ![jwt-secret-cracking](Evidence/jwt-secret-cracking.png)
 
@@ -130,7 +223,7 @@ The weakness in the handling of JWT tokens could allow an attacker to perform a 
 
 
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Log in to the application as a regular user, capture the JWT token issued upon login, and take note of its structure. You can use the credentials below:
@@ -156,13 +249,14 @@ To reproduce the vulnerability, one has to perform the following steps.
 
 
 
-#### Mass Assignment Vulnerability in User Role Creation
+### Mass Assignment Vulnerability in User Role Creation
 
-##### Severity
-Critical 
 
 #### Description
 The application’s `/v1/auth/register ` endpoint does not properly restrict which fields can be included in the registration request payload, allowing the assignment of sensitive fields such as `role`. This enabled the creation of a user with elevated privileges (admin role) by merely adding `"role": "admin"` to the registration payload.
+
+#### Severity
+Critical 
 
 #### Impact in Business Context
 The vulnerability in the C.A.P.A.S. application allows an attacker to gain administrative privileges by exploiting mass assignment. Although administrators don't directly manage applications, they do have access to all user feedback, including detailed browser information that comes with each submission. This data can reveal sensitive details about the user's environment, such as their browser type, operating system, location, cookies, and other device-specific information. With admin access, an attacker could view all feedback from users and collect this information, potentially violating user privacy. This could allow the attacker to create targeted attacks or even track users across sessions. Moreover, by manipulating or deleting feedback, they could cover their tracks and disrupt the application’s review process. The ability to access such data compromises the security of both the application and its users, eroding trust in the platform and jeopardizing the integrity of the feedback system. This vulnerability could lead to misuse of the data, affecting users' security and privacy.
@@ -207,8 +301,8 @@ The vulnerability in the C.A.P.A.S. application allows an attacker to gain admin
     ```
 ![mass-assignment-user-role](Evidence/mass-assignment-user-role.png)
 
-##### Steps to Reproduce
-To reproduce the vulnerability, one has to perform the following steps. This request should create a new user account with a default role.
+#### Steps to Reproduce
+To reproduce the vulnerability, one has to perform the following steps. 
 
 1. Using the application’s registration endpoint (e.g., /v1/auth/register), submit a registration request with basic account details (e.g., email, password). This request should create a new user account with a default role.
 
@@ -229,15 +323,15 @@ To reproduce the vulnerability, one has to perform the following steps. This req
 
 
 
-#### Insecure Direct Object Reference (IDOR) / Insufficient Access Control
+### Insecure Direct Object Reference (IDOR) / Insufficient Access Control
 
-##### Description
+#### Description
 The application allows authenticated users to modify the details of any application by knowing its unique application ID. When sending a PUT request to the endpoint `/v1/applications/me/{applicationId}`, the system does not perform adequate authorization checks to ensure that the user making the request is the owner of the application or has the necessary permissions to modify it. This could potentially allow unauthorized users to change the information of any application simply by knowing its ID. Additionally, users can modify critical fields such as `isEmailVerified` without proper validation, enabling them to bypass necessary email verification steps.
 
-##### Severity
+#### Severity
 Critical
 
-##### Impact in Business Context
+#### Impact in Business Context
 This vulnerability undermines the core function of the C.A.P.A.S. system, which is designed to manage and safeguard sensitive application data associated with cyber attack permissions. Exploiting this vulnerability allows attackers to modify the details of any application, even if they are not the application’s owner. Such modifications could include altering target details, attack plans, security codes, and other sensitive information, effectively falsifying or corrupting the application process. For C.A.P.A.S., where the integrity and careful vetting of cyber attack applications are paramount, this could lead to misleading approvals or rejections, as modified applications may cause reviewers or administrators to approve, reject, or re-evaluate applications based on falsified data.
 
 Additionally, attackers can exploit the ability to change the isEmailVerified field for other users, bypassing the verification step. This could allow unauthorized users to gain access to features or permissions that should only be granted to those with verified email addresses. The system's inability to validate email verification compromises the application’s security, as it could allow users to impersonate verified individuals, gaining unauthorized access to sensitive areas of the platform.
@@ -253,7 +347,7 @@ The credibility of C.A.P.A.S. as a trusted system could be severely compromised 
     ![alt text](Evidence/IDOR-modification-of-approved-and-disabled-editing.png)
 
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Login with the credentials below and create a new applicaiton. Please note the application ID generated for this new entry down. By intercepting in Burp Suite or clicking the edit button that shows up on the newly created applicaiton.
@@ -268,18 +362,18 @@ To reproduce the vulnerability, one has to perform the following steps.
 
 
 
-#### Reflected Cross-Site Scripting (XSS) Leading to Denial of Service (DoS)
+### Reflected Cross-Site Scripting (XSS) Leading to Denial of Service (DoS)
 
-##### Descritpion
+#### Descritpion
 A reflected Cross-Site Scripting (XSS) vulnerability was identified in the /feedback endpoint, which allows attackers to inject arbitrary JavaScript code into the application. When an attacker submits feedback containing malicious script tags, these are reflected back in the response, causing the admin interface to break. During testing, a malicious payload was submitted in the feedback field, which resulted in a 500 Internal Server Error or JSON parsing error. The error occurred when the admin tried to view the feedback data, indicating that the injected script corrupted the JSON response, effectively causing a Denial of Service (DoS) for administrators attempting to view feedback entries.
 
-##### Severity
+#### Severity
 High
 
-##### Impact in Business Context
+#### Impact in Business Context
 This vulnerability can disrupt administrative operations by causing a denial of service on the feedback interface. Since administrators are responsible for reviewing feedback that could influence security decisions, the ability to inject arbitrary scripts and cause errors in the admin view directly impacts their ability to review critical user feedback. This could result in delays in responding to application vulnerabilities, missed security threats, and a deterioration of operational trust in the system. Additionally, this flaw might be exploited for further attacks, potentially leading to more severe consequences like remote code execution in the future.
 
-##### Evidence
+#### Evidence
 - Request
     ```json
     POST /v1/feedback HTTP/1.1
@@ -305,7 +399,7 @@ This vulnerability can disrupt administrative operations by causing a denial of 
 
 ![DoS-for-admin-on-feedback-path](Evidence/DoS-for-admin-on-feedback-path.png)
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Log in to the application as a regular user using valid credentials. 
@@ -337,25 +431,25 @@ To reproduce the vulnerability, one has to perform the following steps.
 9. The admin interface throws an Unhandled Rejection (syntax error), caused by the modified feedback content, disrupting the feedback display functionality.
 
 
-#### User Enumeration vai Password Reset
+### User Enumeration vai Password Reset
 
-##### Description
+#### Description
 The `/v1/auth/forgot-password` path allows attackers to determine whether specific email addresses exist within the application by observing distinct HTTP status codes returned for valid and invalid email addresses. When submitting an invalid email through this endpoint, the application returns a 404 Not Found status, explicitly indicating that no user is associated with that email. For valid email addresses, the application instead returns a 500 Internal Server Error, revealing a misconfigured email service but confirming the account's existence. This difference in response enables attackers to enumerate valid user accounts by testing various email addresses and analyzing the responses.
 
-##### Severity 
+#### Severity 
 Medium
 
-# Impact in Business Context
+#### Impact in Business Context
 - Attackers can exploit this vulnerability to confirm the existence of user accounts. By probing the forgot-password path with different email addresses, an attacker can compile a list of valid user accounts in the system. This information can later be used to facilitate targeted attacks, such as phishing or credential stuffing.
 
-##### Evidence
+#### Evidence
 - Non-existing account
 ![user-enumeration-vai-forgot-pasasword-non-existing-account](Evidence/user-enumeration-vai-forgot-pasasword-non-existing-account.png)
 
 - Existing account
 ![user-enumeration-via-forgot-password-existing-account](Evidence/user-enumeration-via-forgot-password-existing-account.png)
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Open your browser and navigate to the api docs for the application (http://your.vm.ip.address:3000/v1/docs). 
@@ -370,21 +464,21 @@ To reproduce the vulnerability, one has to perform the following steps.
 
 
 
-#### Verbose Error Handling in Authentication Endpoint
+### Verbose Error Handling in Authentication Endpoint
 
-##### Description
+#### Description
 The `/v1/me` endpoint returns an overly detailed error message when accessed without authentication. 
 This message includes information about the application’s authentication process, specific 
 internal paths, and function calls. This could help an attacker better understand the 
 application’s structure and authentication mechanism.
 
-##### Severity 
+#### Severity 
 Low
 
-##### Impact in Business Context
+#### Impact in Business Context
  Attackers could use this information to gather insights into the backend system and potentially exploit other vulnerabilities to compromise the platform. With knowledge of internal error details, an attacker may be able to craft more precise attacks, targeting weak points in authentication or other areas of the application.
 
-##### Evidence
+#### Evidence
 - Request:
 
     ```
@@ -404,26 +498,26 @@ Low
 ![alt text](Evidence/verbose-error-handling-authentication.png)
 
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 1. Attempt to access the /v1/me endpoint without providing any authentication credentials.
 2. Observe the error message returned by the application, noting that it contains detailed information about the application's internal paths and function calls.
 3. This behavior can be reproduced consistently without any specific payloads or authentication details.
 
-### Denial of Service and Fault Injection
 
-####  Cross-Origin Resource Sharing (CORS) Misconfiguration
 
-##### Description
+###  Cross-Origin Resource Sharing (CORS) Misconfiguration
+
+#### Description
 The application improperly trusts arbitrary origins due to a misconfigured CORS policy. Specifically, it allows requests from any origin by setting the Access-Control-Allow-Origin header to *, which can lead to unauthorized access and data leakage. This was demonstrated by sending a POST request with the Origin header set to `http://example.com`, and the server accepted it without validation.
 
-##### Severity
+#### Severity
 Medium
 
-##### Impact
+#### Impact in Business Context
 An attacker could exploit this vulnerability to perform unauthorized actions on behalf of authenticated users. For example, if a user is logged into the application, an attacker could create a malicious website that makes requests to the vulnerable API, potentially accessing sensitive user data or performing actions like account modifications without the user's consent. This could lead to data theft, account takeover, and significant reputational damage to the organization.
 
-##### Evidence
+#### Evidence
 - Request 
 
     ```json
@@ -463,7 +557,7 @@ An attacker could exploit this vulnerability to perform unauthorized actions on 
 
 ![alt text](<Evidence/cross-orgin-sharing - arbitrary-origin-trusted.png>)
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Ensure that the application is running and accessible. Open your web browser and navigate to the login page of the application.
@@ -488,23 +582,23 @@ To reproduce the vulnerability, one has to perform the following steps.
 10. Confirm that the server responds with sensitive user information, indicating that the server does not correctly validate the origin of the request, thus trusting the modified origin.
 
 
-#### Lack of Brute-Force Protection on Authentication Endpoints
+### Lack of Brute-Force Protection on Authentication Endpoints
 
-##### Description
+#### Description
 
 The C.A.P.A.S. application lacks protections against brute-force attacks on its login endpoints, allowing attackers to make numerous authentication attempts without restrictions. During testing, a brute-force attack was simulated on a user account, attempting around 263 login attempts without encountering any CAPTCHA, account lockout, or rate-limiting defenses. As a result, the password was successfully cracked, demonstrating the ease with which an attacker could bypass weak passwords and gain unauthorized access to user accounts.
 
-##### Severity
+#### Severity
 Medium
 
-##### Impact in Business Context
+#### Impact in Business Context
 This vulnerability poses a significant security risk to the application and its users. The lack of rate-limiting means that attackers can conduct password guessing attacks at scale, potentially gaining unauthorized access to sensitive user accounts. Since many users might use weak or reused passwords, this vulnerability increases the likelihood of successful unauthorized access. Once an attacker gains access to an account, they can misuse it for malicious activities, such as accessing sensitive data, performing unauthorized actions, or impersonating legitimate users. In the context of the application, where users can submit attack requests with sensitive details, unauthorized access could lead to severe consequences, including data breaches or system compromise. Additionally, this vulnerability could be exploited for lateral movement within the application, especially if an attacker is able to access an administrative account.
 
-##### Evidence
+#### Evidence
 - Cracked Password
 ![weak-password-cracking](Evidence/weak-password-cracking.png)
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 
 1. Using the given email address below, attem to log in using a common password list or try random passwords for a number of times.
     - email: test1@silverskin.fi
@@ -515,22 +609,22 @@ This vulnerability poses a significant security risk to the application and its 
 
 
 
-#### Insecure Access Control to Admin Resource
+### Insecure Access Control to Admin Resource
 
-##### Description
+#### Description
 The `/service-dashboard` endpoint, which is intended to be restricted to admins only, can be accessed by users with regular and reviewer roles. This issue stems from insufficient access controls in the application, where authorization checks are either missing or improperly configured for the /service-dashboard. Regular users and reviewers can access this path directly by navigating to it, despite the fact that it is supposed to be restricted to admins who are responsible for viewing sensitive job details and managing the system's overall operations.
 
-##### Severity
+#### Severity
 Low
 
-##### Impact in Business Context
+#### Impact in Business Context
 While the `/service-dashboard` path does not expose highly sensitive data, its availability to unauthorized users could lead to the unintended exposure of operational details, such as job statuses and internal processes. In the context of the C.A.P.A.S. application, this could give lower-privilege users insights into system operations that were not intended for their access. This may not directly compromise confidentiality or integrity but undermines the principle of least privilege by allowing users to view pages designated for higher-privilege roles. The broader impact includes the potential for confusion or misinterpretation of system operations by users who may not have the context or permission to view such information. This vulnerability highlights the need for more robust access controls to ensure that users only see what they are authorized to view, upholding the system's integrity and trustworthiness.
 
 #### Evidence
 - Service dashboard accessed by lower privilege user
 ![service-dashboard-accessed-by-lower-privilege-user](Evidence/service-dashboard-accessed-by-lower-privilege-user.png)
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 To reproduce the vulnerability, one has to perform the following steps.
 
 1. Login to the app with the credentials below:
@@ -542,25 +636,25 @@ To reproduce the vulnerability, one has to perform the following steps.
 3. Observe that, as a regular user, you are able to access a page that is not available from the home page or intended for your role.
 
 
-#### Weak Application ID Enumeration – Predictable Application ID
+### Weak Application ID Enumeration – Predictable Application ID
 
-##### Descritpion
+#### Descritpion
 The application uses a predictable and sequential pattern for application IDs, which can be easily enumerated by an attacker. This vulnerability occurs because the structure of the application ID is not randomized or obfuscated, allowing users to guess the IDs of other users' applications simply by modifying a part of the URL or request payload. Attackers can exploit this weakness to gain unauthorized access to or modify application data that belongs to other users.
 
-##### Severity
+#### Severity
 Medium
 
-##### Impact in Business Context
+#### Impact in Business Context
 In the C.A.P.A.S. system, which deals with sensitive data surrounding cyber attack permissions, the ability to enumerate application IDs poses a risk to data integrity. While the system doesn't necessarily expose highly sensitive information directly through these application IDs, an attacker could exploit this flaw to alter application details, such as attack targets or methodologies, by modifying the application ID in requests. This could mislead reviewers and administrators into approving or rejecting applications based on falsified data, ultimately compromising the reliability and accuracy of the system's decision-making process.
 
 Though the vulnerability doesn’t expose major data breaches, its exploitation could lead to misuse of the system, such as altering legitimate application details to create backdoors or grant unauthorized privileges. It could also affect the trust in C.A.P.A.S., as users and administrators may no longer be confident in the application’s ability to properly protect sensitive application data from manipulation. This could undermine the integrity of the cyber attack permission process and create openings for further malicious activity.
 
-##### Evidence
+#### Evidence
 - Application ID enumeration in Burp Intruder
 ![application-id-enumeration](Evidence/application-id-enumeration.png)
 
 
-##### Steps to Reproduce
+#### Steps to Reproduce
 1. Login in with the provided user account below:
     - email: test1@silverskin.fi
     - password: Test123!
@@ -578,3 +672,15 @@ Though the vulnerability doesn’t expose major data breaches, its exploitation 
 ![application-id-enum-intruder-setup](Evidence/application-id-enum-intruder-setup.png)
 
 6. Start the attack, and observe that Burp Intruder successfully enumerates a range of application IDs, showing both accessible and potentially unauthorized application data.
+
+
+
+## Conclusion
+
+The findings from this assessment highlight a series of critical vulnerabilities in the C.A.P.A.S. application that expose it to a wide range of potential attacks. The improper handling of JWT tokens, the lack of proper access control mechanisms, and weaknesses in input validation and error handling create significant risks for unauthorized access, privilege escalation, and data integrity breaches.
+
+Given that C.A.P.A.S. deals with sensitive cyber attack permissions, any compromise of these vulnerabilities could have severe consequences, including unauthorized access to attack plans, manipulation of attack data, and the potential for launching cyber attacks using compromised systems. The combination of these issues makes the application highly vulnerable to both external and internal threats.
+
+Immediate remediation is necessary to address these issues. Implementing stronger access controls, enhancing input validation, improving error handling, and adding protections against brute-force and XSS attacks will significantly improve the security posture of the C.A.P.A.S. application. These measures will help ensure that only authorized users can interact with sensitive data, maintain the confidentiality of the attack information, and preserve the trust in the application as a secure platform for managing cyber attack permissions.
+
+By addressing these vulnerabilities promptly, C.A.P.A.S. can mitigate the risk of a successful attack and ensure the integrity and security of the application in future operations.
