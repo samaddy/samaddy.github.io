@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Reflections from a Recent Web Application Security Assessment">
+    <meta name="author" content="Samuel Kwaku Addison">
+
+    <meta property="og:site_name" content="Samuel K. Addison - Website" />
+    <meta property="og:title" content="Reflections from a Recent Web Application Security Assessment" />
+    <meta property="og:description" content="Cyber Security Engineer Reflections on a Recent Web Application Security Assessment" />
+    <meta property="og:image" content="https://github.com/SamAddy/samaddy.github.io/raw/main/images/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://samaddy.github.io/Blog/python-under-the-hood.html">
+
+    <title>Reflections from a Recent Web Application Security Assessment | Samuel K. Addison - Cyber Security Engineer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/997d814be9.css" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+ 
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="icon" href="/images/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/997d814be9.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = location.href;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+            if (link.href === currentLocation) {
+                link.classList.add('current');
+            }
+            });
+        });
+    </script> -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-10C9B08WGE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'G-10C9B08WGE');
+    </script>
+
+    <style>
+        body {
+            background: #130a3f;
+            font-family: 'Open Sans', Helvetica, sans-serif;
+            color: #7E7E7E;
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2rem;
+            line-height: 3.25rem;
+            font-family: 'inter', sans-serif;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav a:link {
+            color: #fff;
+        }
+
+        .nav a:hover, a:active{
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .container-fluid a:hover {
+            text-decoration: none;
+        }
+
+        .nav-link{
+            color: #fff;
+        }
+
+        .active {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        .container-fluid h1 {
+            margin-top: 2.0rem;
+            font-family: "inter", sans-serif;
+            font-size: 32px;
+        }
+
+        /* blog styling */
+        .blog h2 {
+            font-weight: 400;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #08a0e9;
+        }
+        .content p {
+            color: #ffff;
+        }
+
+        .copy-code {
+            position: absolute;
+        /*  top: 0; */
+        /*  right: 0; */
+            cursor: pointer;
+        }
+
+
+        /* socials and copyright */
+        .socials-copyright {
+            /* display: flex; */
+            padding-top: 5rem;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .social-container a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .social-container a:hover {
+            text-decoration: none;
+        }
+
+        .fa-twitter {
+            color: #08a0e9;
+        }
+
+        .fa-youtube {
+            color: #FF0000;
+        }
+
+        .p-small {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        time {
+            text-align: center;
+        }
+
+        ol li {
+            font-weight: bolder;
+            margin-top: 10px;
+
+        }
+
+        ol span {
+            font-weight: normal;
+        }
+        
+        article {
+        position: relative;
+        padding: 20px;
+        z-index: 2;
+
+        max-width:calc(100vw - 4rem);
+        width:60rem;
+        margin:0 auto
+        }
+
+        .caption {
+            text-align: center;
+        }
+
+        .caption time {
+            font-size: small;
+        }
+
+        .blog li {
+            color: #fff;
+        }
+
+        .screenshot {
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        @media screen and (max-width: 780px) {
+            article {
+                max-width:100%;
+                margin:0 auto
+            }
+
+            .contact-container {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+
+            .screenshot img {
+                max-width: 100%;
+            }
+
+            .p-small {
+                margin-top: 0px;
+            } 
+        }
+
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    <header>
+        <div class="container-fluid">
+            <h1><a class="navbar-brand" href="https://samaddy.github.io/">Samuel K. Addison</a></h1>
+        </div>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://samaddy.github.io/Projects/projects.html">Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="https://samaddy.github.io/Blog/blog.html">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://samaddy.github.io/contact.html">Contact</a>
+                  </li>
+              </ul>
+        </div>
+    </header>
+    <main>
+        <article class="blog">
+            <div class="caption">
+                <time datetime="2023-11-03">Monday, November 11, 2024</time>
+                <h1>Reflections from a Recent Web Application Security Assessment</h1>
+            </div>
+            <div class="content">
+                <section>
+                    <p>
+                        A recent web application security assessment offered valuable insights into the challenges and responsibilities 
+                        that come with safeguarding online applications. By following the OWASP Testing Guide as a foundational framework, 
+                        the assessment systematically uncovered vulnerabilities that could affect data integrity, user privacy, and 
+                        system stability. With the help of industry-standard tools and methodologies, this assessment went beyond 
+                        identifying vulnerabilities to connect each issue with its potential impact in a real-world business context.
+                    </p>
+                    <p>In this post, we’ll explore the techniques, methods, and the key findings that illustrate the critical 
+                        importance of securing web applications.
+                    </p>
+                </section>
+                <section>
+                    <h2>Why Follow the OWASP Guide?</h2>
+                    <p>
+                        Using the OWASP Guide as a framework provided a comprehensive, structured approach for the assessment. 
+                        It ensured that commonly exploited issues, as well as more nuanced weaknesses, were thoroughly tested. 
+                        This guide, particularly the <strong>OWASP Top 10</strong> vulnerabilities, directed the assessment's 
+                        focus toward high-impact areas such as injection flaws, security misconfigurations, and access control 
+                        weaknesses.
+                    </p>
+                    <p>
+                        For those interested, here are links to OWASP’s resources that correspond with the 
+                        vulnerabilities encountered:
+                    </p>
+                    <ul>
+                        <li><a href="https://owasp.org/www-community/attacks/Path_Traversal" target="_blank">Path Traversal Vulnerability</a></li>
+                        <li><a href="https://owasp.org/www-project-cheat-sheets/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" target="_blank">JSON Web Token Cheat Sheet</a></li>
+                        <li><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/" target="_blank">Mass Assignment</a></li>
+                        <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">IDOR</a></li>
+                        <li><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">XSS Vulnerabilities</a></li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Key Findings and Insights</h2>
+                    <p>
+                        Each vulnerability presented unique lessons in understanding its impact on the application and the business context.
+                    </p>
+        
+                    <h3>1. Path Traversal to Access Sensitive Files</h3>
+                    <p>
+                        The assessment revealed a path traversal vulnerability that allowed access to unintended files. This discovery 
+                        emphasized the importance of securely coding file handling and input validation, showing how a seemingly small 
+                        error could lead to unauthorized data exposure.
+                    </p>
+        
+                    <h3>2. Weaknesses in JWT Handling and Token Management</h3>
+                    <p>Testing JWT handling uncovered multiple weaknesses:</p>
+                    <ul>
+                        <li>
+                            <strong>
+                                Weak Secret Key:
+                            </strong> 
+                            Cracking the JWT secret made it possible to impersonate users and alter tokens, underscoring the 
+                            importance of using complex, randomized secrets.
+                        </li>
+                        <li>
+                            <strong>
+                                Token Expiry Manipulation:
+                            </strong> 
+                            Manipulating the <code>exp</code> field extended token lifespans, highlighting the need for 
+                            server-side token validation to enforce expiration.
+                        </li>
+                    </ul>
+                    <p>
+                        These flaws illustrate the critical role of strong JWT management in securing user sessions, 
+                        particularly for applications handling sensitive data.
+                    </p>
+        
+                    <h3>3. Mass Assignment in User Role Control</h3>
+                    <p>
+                        Through a mass assignment vulnerability, the assessment team could escalate privileges by adding 
+                        unauthorized fields during registration. This issue highlighted the importance of back-end 
+                        validation, especially in enforcing role-based access controls (RBAC) to prevent unauthorized 
+                        privilege escalation.
+                    </p>
+        
+                    <h3>4. Reflected Cross-Site Scripting (XSS) Causing Denial of Service (DoS)</h3>
+                    <p>Injecting malicious JavaScript in specific fields triggered a DoS condition, with persistent 
+                        errors disrupting admin views. This vulnerability illustrated how XSS attacks could extend 
+                        beyond data exposure, affecting system functionality and usability. Proper input validation, 
+                        especially for user-controlled fields, is essential for mitigating XSS risks.
+                    </p>
+        
+                    <h3>5. User Enumeration via Password Reset</h3>
+                    <p>The application allowed enumeration of registered users through error messaging in the 
+                        password reset function. This vulnerability reminded the assessment team of the need 
+                        to handle error responses carefully, as these messages can inadvertently reveal 
+                        sensitive user information and lead to targeted attacks.
+                    </p>
+        
+                    <h3>6. Predictable Application IDs Enabling IDOR Exploits</h3>
+                    <p>Predictable patterns in application IDs allowed unauthorized access to other users’ 
+                        data—an insecure direct object reference (IDOR) vulnerability. Burp Suite’s Intruder 
+                        made testing these patterns efficient, reinforcing the importance of generating 
+                        randomized, unique identifiers for sensitive records.
+                    </p>
+                </section>
+                
+                <section>
+                    <h2>Understanding Vulnerabilities in a Business Context</h2>
+                    <p>
+                        This assessment underscored the importance of viewing vulnerabilities not only as technical issues but as 
+                        real-world risks. By connecting each finding with its potential business impact—whether related to user trust, 
+                        data privacy, or application reliability—this approach added meaningful context to each vulnerability. For example, 
+                        while IDOR might appear technically minor, its business implications could be significant if unauthorized access to 
+                        sensitive user data is possible.
+                    </p>
+                    <p>
+                        Understanding these vulnerabilities in a business context enhances reporting clarity and helps decision-makers 
+                        prioritize remediation based on real-world risk.
+                    </p>
+                </section>
+                <section>
+                    <h2>Conclusion</h2>
+                    <p>
+                        This assessment reinforced that securing web applications requires both technical skill 
+                        and an understanding of real-world impacts. Each vulnerability, from weak tokens to IDOR 
+                        issues, underscored the importance of a layered approach to security. By following a structured 
+                        framework like the OWASP guide and using specialized testing approaches, this assessment journey 
+                        has built a strong foundation for future security work.
+                    </p>
+                    <p>
+                        Looking at security through both a technical and business lens ensures that the work goes 
+                        beyond fixing issues and contributes to a stronger, more resilient application landscape overall.
+                    </p>
+                </section>
+        </article>
+    </main>
+    <footer>
+        <section class="socials-copyright">
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="social-container">
+                                <span class="fa-stack">
+                                    <a href="https://github.com/SamAddy">
+                                        <i class="fab fa-github fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.linkedin.com/in/samuel-k-addison/">
+                                        <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://twitter.com/Prof_Addy">
+                                        <i class="fa-brands fa-twitter fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                                <span class="fa-stack">
+                                    <a href="https://www.youtube.com/@profaddy">
+                                        <i class="fa-brands fa-youtube fa-stack-1x"></i>
+                                    </a>
+                                </span>
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+             <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="p-small">© <script>document.write(new Date().getFullYear())</script> - SamAddy</p>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </section>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
