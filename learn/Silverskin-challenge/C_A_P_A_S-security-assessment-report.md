@@ -74,6 +74,30 @@
         - [Impact in Business Context](#impact-in-business-context-10)
         - [Evidence](#evidence-10)
         - [Steps to Reproduce](#steps-to-reproduce-10)
+    - [NoSQL Injection (NEW)](#nosql-injection)
+        - [Description](#description-11)
+        - [Severity](#severity-11)
+        - [Impact in Business Context](#impact-in-business-context-11)
+        - [Evidence](#evidence-11)
+        - [Steps to Reproduce](#steps-to-reproduce-11)
+    - [Reflected Cross-Site Scripting (NEW)](#reflected-cross-site-scripting-xss)
+        - [Description](#description-12)
+        - [Severity](#severity-12)
+        - [Impact in Business Context](#impact-in-business-context-12)
+        - [Evidence](#evidence-12)
+        - [Steps to Reproduce](#steps-to-reproduce-12)
+    - [Open Redirection (NEW)](#open-redirection)
+        - [Description](#description-13)
+        - [Severity](#severity-13)
+        - [Impact in Business Context](#impact-in-business-context-13)
+        - [Evidence](#evidence-13)
+        - [Steps to Reproduce](#steps-to-reproduce-13)
+    - [Potential SSRF Leading to DoS (NEW)](#potential-ssrf-leading-to-dos)
+        - [Description](#description-14)
+        - [Severity](#severity-14)
+        - [Impact in Business Context](#impact-in-business-context-14)
+        - [Evidence](#evidence-14)
+        - [Steps to Reproduce](#steps-to-reproduce-14)
 - [Conclusion](#conclusion)
 
 ## Executive Summary
@@ -122,6 +146,13 @@ During the security assessment of the C.A.P.A.S. (Cyber Attack Permission Applic
 
 9. Weak Application ID Enumeration – Predictable Application ID: The application uses predictable patterns for application IDs, allowing attackers to enumerate IDs and access other users' data by manipulating specific portions of the ID in automated attacks.
 
+10. NoSQL Injection: A NoSQL injection vulnerability was identified that allows attackers to bypass access controls and retrieve sensitive data for all users in the database. This was exploited by injecting specially crafted payloads into the id parameter of the user retrieval endpoint, leading to the disclosure of all user records, including sensitive data like email addresses and roles.
+
+11. Reflected Cross-Site Scripting (XSS): A reflected XSS vulnerability exists where user-provided input is reflected back in responses without proper sanitization. This can allow attackers to inject malicious JavaScript that could be executed in the user's browser, enabling malicious activity like session hijacking or defacement of the user interface.
+
+12. Open Redirection: The application fails to validate URLs provided in user-generated content (e.g., the "Target Website" field). This creates a risk of open redirection, where attackers can manipulate users into visiting malicious websites by injecting harmful URLs. This could be exploited for phishing or malware distribution.
+
+13. Potential SSRF Leading to DoS: The application exhibits behavior that can be exploited by attackers to perform server-side request forgery (SSRF) attacks. By manipulating URLs, attackers can trigger delays in the server’s response, leading to Denial of Service (DoS) conditions that impact the application’s availability.
 
 ## Detailed Findings 
 
@@ -675,6 +706,205 @@ Though the vulnerability doesn’t expose major data breaches, its exploitation 
 
 
 
+### NoSQL Injection
+
+#### Description
+A NoSQL injection vulnerability was identified in the `GET /v1/users/:id` endpoint of the application. 
+During testing, it was observed that authenticated users could send a crafted request to retrieve 
+data for all users in the database, bypassing intended access controls. By manipulating the id parameter 
+in the request, attackers can inject NoSQL code that causes the server to execute queries beyond the expected user data retrieval.
+Specifically, the crafted payload `GET /v1/users/%27%3Breturn%20%27a%27%3D%3D%27a%27%20%26%26%20%27%27%3D%3D%27` 
+allowed arbitrary NoSQL expressions to be processed by the server, which led to the disclosure of sensitive information for all user records in the database.
+
+#### Severity
+High
+
+#### Impact in Business Context
+This vulnerability could lead to a serious breach of trust, exposing sensitive 
+user details, like emails and roles, to anyone with basic access to the system. 
+An attacker who obtains all user records could misuse this information to create 
+unauthorized permissions, alter records, or even use the data to target individuals in the organization.
+
+#### Evidence 
+- Request:
+    ```json
+    GET /v1/users/%27%3Breturn%20%27a%27%3D%3D%27a%27%20%26%26%20%27%27%3D%3D%27 HTTP/1.1
+    Authorization: Bearer <JWT Token>
+    ```
+
+- Respone:
+    ```json
+    [
+        {
+            "role":"user",
+            "isEmailVerified":true,
+            "name":"eval('alert(1)')",
+            "email":"test1@silverskin.fi",
+            "id":"61f7a23292ae82e903ca5f15"
+        },
+        {
+            "role":"user",
+            "isEmailVerified":false,
+            "name":"Teppo Winnipeg",
+            "email":"test5@silverskin.fi",
+            "id":"61f7a28192ae82e903ca5f22"
+            },
+            {
+                "role":"reviewer",
+                "isEmailVerified":false,
+                "name":"Review Er",
+                "email":"test2@silverskin.fi",
+                "id":"61f7a33992ae82e903ca5f3a"
+            },
+            {
+                "role":"admin",
+                "isEmailVerified":false,
+                "name":"Idi Admin",
+                "email":"test3@silverskin.fi",
+                "id":"61f7a3cb92ae82e903ca5f4a"
+            },
+            {
+                "role":"user",
+                "isEmailVerified":false,
+                "name":"Test User",
+                "email":"test@test.fi",
+                "id":"6321afbf6367d02c640290f4"
+            },
+            ...
+    ]
+    ```
+![NonSQL Injection](Evidence/mongoid-injection.png)
+
+
+#### Steps to Reproduce
+To reproduce the vulnerability, one has to perform the following steps.
+
+1. Authenticate as a user and obtain a valid JWT.
+
+2. Send a GET request to `GET /v1/users/%27%3Breturn%20%27a%27%3D%3D%27a%27%20%26%26%20%27%27%3D%3D%27`.
+
+3. Observe the response, which includes details of all users in the database.
+
+
+### Reflected Cross-Site Scripting (XSS)
+
+#### Description 
+A reflected cross-site scripting (XSS) vulnerability exists within the PATCH /v1/users/{user_id} endpoint, where user-provided input is inadequately sanitized before being reflected back in the response. This endpoint allows users to update profile attributes, such as name and email. However, injecting JavaScript code into the name field, for example, `<script>alert(XSS)</script>`, causes the application to reflect the unsanitized script back in the response. Consequently, this can lead to the execution of arbitrary JavaScript within the context of a user's browser when the response is rendered on the client side, posing significant security risks. This vulnerability is also found in most of the user input areas.
+
+#### Severity
+Medium
+
+#### Impact in Business Context
+Attackers could exploit this vulnerability to manipulate the user interface, steal sensitive session data, or impersonate users with legitimate access to application functionalities. Since C.A.P.A.S. users likely have roles associated with varying levels of permissions, an XSS attack could be particularly impactful if it targets high-privilege accounts, potentially leading to unauthorized data access and jeopardizing confidential information about cybersecurity permissions and activities.
+
+#### Evidence
+- Request:
+    ```json
+    PATCH /v1/users/61f7a23292ae82e903ca5f15 HTTP/1.1
+
+    Authorization: Bearer <JWT Token>
+    
+    {
+        "name":"<script>alert('XSS')</script>",
+        "email":"test1@silverskin.fi",
+        "isEmailVerified":true
+    }
+    ```
+- Response:
+    ```json
+    {
+        "role":"user",
+        "isEmailVerified":true,
+        "name":"<script>alert('XSS')</script>",
+        "email":"test1@silverskin.fi",
+        "id":"61f7a23292ae82e903ca5f15"
+    }
+    ```
+
+#### Steps to Reproduce
+To reproduce the vulnerability, one has to perform the following steps.
+
+1. Log in as the user below:
+    - email: test1@silverskin.fi
+    - password: Test123!
+
+2. Navigate to your account and update the user details (e.g. Update name to be a script `<script>alert('XSS')</script>`)
+
+3. Click on Save Changes, observe the updated script reflect back with no sanitization. 
+
+
+### Open Redirection
+
+#### Description
+An open redirect vulnerability was identified in the path `create-application`, where users can input arbitrary URLs in the "Target Website" field during the creation of a new application. The application allows users to specify URLs that can be clicked later, which are then treated as clickable links within the application interface. There is no validation or sanitization of the input URL, enabling users to inject potentially malicious URLs that may lead to external or local resources.
+
+#### Severity
+Low
+
+#### Impact in Business Context
+The open redirect vulnerability in this application introduces a significant security risk, particularly when paired with the Insecure Direct Object Reference (IDOR) vulnerability that exists in the application creating functionality. If an attacker is able to exploit the IDOR issue to gain unauthorized access to a user’s application, they can manipulate the “Target Website” URL field within an application record and replace it with a malicious link. When the targeted user or reviewer subsequently clicks this link, they are directed to the attacker’s specified site. This can enable various malicious activities, such as phishing attacks that prompt users to reveal sensitive information or sites designed to install malware on the user’s device.
+
+#### Evidence 
+    - Screenshot of link to be redirected to when `Open` is clicked on
+![open-redirect](Evidence/open-redirect.png)
+
+#### Step to Reproduce
+To reproduce the vulnerability, one has to perform the following steps.
+
+1. Log in as the user below and navigate to the "Create Application" section.
+    - email: test1@silverskin.fi
+    - password: Test123!
+
+2. Fill out the form to create a new application and in the "Target Website" field, enter a potentially malicious or local URL (e.g., http://127.0.0.1:8000 or any other external URL). Submit the form to create a new application.
+
+3. View the submitted application, where the "Open" link under the "Target Website" field will now point to the injected URL.
+
+
+
+### Potential SSRF Leading to DoS 
+
+#### Description
+An issue was observed when making a request to the endpoint `/v1/integrations/legacy/applications?instance=http://127.0.0.1:80/`. When the URL supplied to the instance parameter points to the internal loopback address (127.0.0.1) with specific port numbers, the application takes a significantly longer time to respond. During this delay, the user interface becomes noticeably less responsive, likely due to the system attempting to connect to internal services or resources. This delay could eventually lead to a Denial of Service (DoS), where users experience disruptions in their interactions with the application due to the server being unresponsive or overloaded by these internal requests.
+
+#### Severity
+Medium
+
+#### Impact in Business Context
+
+ This vulnerability can lead to service disruption and degrade user experience. When an attacker modifies the URL to point to internal services or  ports on 127.0.0.1, it can cause the application to become unresponsive or slow, impacting legitimate users' ability to interact with the application. In a production environment, this could result in downtime or performance degradation, which would harm the availability and usability of the application. The attacker can possibly exfilitrate data out of the system as well.
+
+#### Evidence 
+- Request with delayed and no response
+
+![potential SSRF to DoS](Evidence/potential-ssrf-to-dos.png)
+
+
+- Interrupted user interface during request processing
+![Interrupted UI](Evidence/interupted-UI.png)
+
+
+#### Step to Reproduce
+
+To reproduce the vulnerability, one has to perform the following steps.
+
+1. Login as admin with the credentials below and obtain an admin token
+    - Email: test3@silverskin.fi
+    - Password: I4m4admin----
+
+2. In the documentation, locate the endpoint `/v1/integrations/legacy/applications`.
+
+3. With Burp Suite running and intercepting traffic, initiate a request to the endpoint.
+
+4. Using Burp Suite's Intercept feature, modify the GET request to include a malicious `instance` parameter pointing to `http://127.0.0.1:<specific port>/`. For example, `http://127.0.0.1:80/` or `http://127.0.0.1:8080/`.
+
+5. Once you have modified the request, forward it through Burp Suite to the server.
+
+6. Pay attention to the server's response. You may notice significant delays or the request timing out.
+
+7. While the request is being processed, observe the application interface. The UI may become unresponsive or sluggish, as the server is potentially struggling to process the malicious request when the user tries to use the application at the same time.
+
+
+
 ## Conclusion
 
 The findings from this assessment highlight a series of critical vulnerabilities in the C.A.P.A.S. application that expose it to a wide range of potential attacks. The improper handling of JWT tokens, the lack of proper access control mechanisms, and weaknesses in input validation and error handling create significant risks for unauthorized access, privilege escalation, and data integrity breaches.
@@ -684,3 +914,4 @@ Given that C.A.P.A.S. deals with sensitive cyber attack permissions, any comprom
 Immediate remediation is necessary to address these issues. Implementing stronger access controls, enhancing input validation, improving error handling, and adding protections against brute-force and XSS attacks will significantly improve the security posture of the C.A.P.A.S. application. These measures will help ensure that only authorized users can interact with sensitive data, maintain the confidentiality of the attack information, and preserve the trust in the application as a secure platform for managing cyber attack permissions.
 
 By addressing these vulnerabilities promptly, C.A.P.A.S. can mitigate the risk of a successful attack and ensure the integrity and security of the application in future operations.
+
