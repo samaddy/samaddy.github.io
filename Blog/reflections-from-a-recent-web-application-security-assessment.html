@@ -249,130 +249,161 @@
             <div class="content">
                 <section>
                     <p>
-                        A recent web application security assessment offered valuable insights into the challenges and responsibilities 
-                        that come with safeguarding online applications. By following the OWASP Testing Guide as a foundational framework, 
-                        the assessment systematically uncovered vulnerabilities that could affect data integrity, user privacy, and 
-                        system stability. With the help of industry-standard tools and methodologies, this assessment went beyond 
-                        identifying vulnerabilities to connect each issue with its potential impact in a real-world business context.
-                    </p>
-                    <p>
-                        In this blog, we’ll explore the techniques, methods, and the key findings that illustrate the critical 
-                        importance of securing web applications.
+                       During a recent <strong>black‑box engagement</strong> on a SaaS platform that manages cyber‑attack permission requests,
+                       our team uncovered a cascade of classic yet still‑dangerous web‑application flaws.
+                       From directory‑traversal that leaked system files to a mis‑configured JWT implementation that allowed token replay,
+                       the findings illustrate how easy it is for an attacker to pivot from low‑level bugs to full‑scale compromise.
+                       Below we walk through the most critical issues, why they matter, and how developers can remediate them—while keeping the client’s confidential details private.
                     </p>
                 </section>
                 <section>
-                    <h2>Why Follow the OWASP Guide?</h2>
+                    <!-- ==================== WHY A STRUCTURED ASSESSMENT MATTERS ==================== -->
+                    <h2>Why a Structured Assessment Matters</h2>
                     <p>
-                        Using the OWASP Guide as a framework provided a comprehensive, structured approach for the assessment. 
-                        It ensured that commonly exploited issues, as well as more nuanced weaknesses, were thoroughly tested. 
-                        This guide, particularly the <strong>OWASP Top 10</strong> vulnerabilities, directed the assessment's 
-                        focus toward high-impact areas such as injection flaws, security misconfigurations, and access control 
-                        weaknesses.
+                        Aligning a penetration test with the <a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10</a> and the
+                        <a href="https://owasp.org/www-project-application-security-verification-standard/" target="_blank">ASVS</a> gives a repeatable checklist,
+                        ensures coverage of the most common attack vectors, and helps prioritize remediation based on risk.
                     </p>
-                    <p>
-                        For those interested, here are links to OWASP’s resources that correspond with the 
-                        vulnerabilities encountered:
-                    </p>
-                    <ul>
-                        <li><a href="https://owasp.org/www-community/attacks/Path_Traversal" target="_blank">Path Traversal Vulnerability</a></li>
-                        <li><a href="https://owasp.org/www-project-cheat-sheets/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" target="_blank">JSON Web Token Cheat Sheet</a></li>
-                        <li><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/" target="_blank">Mass Assignment</a></li>
-                        <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">IDOR</a></li>
-                        <li><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">XSS Vulnerabilities</a></li>
-                    </ul>
                 </section>
                 <section>
-                    <h2>Key Findings and Insights</h2>
+                     <!-- ==================== TOP 5 HIGH‑IMPACT FINDINGS ==================== -->
+                    <h2>Top 5 High‑Impact Findings</h2>
+
+                    <h3>1. Directory Traversal</h3>
                     <p>
-                        Each vulnerability presented unique lessons in understanding its impact on the application and the business context.
+                        An endpoint that served static files allowed path manipulation (<code>../</code>) resulting in the exposure of files outside the web root,
+                        such as system configuration files. This demonstrates how a seemingly harmless file‑serving route can become an information‑leak vector.
                     </p>
-        
-                    <h3>1. Path Traversal to Access Sensitive Files</h3>
+
+                    <h3>2. Improper JWT Handling</h3>
                     <p>
-                        The assessment revealed a path traversal vulnerability that allowed access to unintended files. This discovery 
-                        emphasized the importance of securely coding file handling and input validation, showing how a seemingly small 
-                        error could lead to unauthorized data exposure.
+                        The application used a weak signing secret and did not enforce short token lifetimes.
+                        An attacker could crack the secret, forge tokens, and extend sessions indefinitely, effectively bypassing authentication.
                     </p>
-        
-                    <h3>2. Weaknesses in JWT Handling and Token Management</h3>
-                    <p>Testing JWT handling uncovered multiple weaknesses:</p>
-                    <ul>
-                        <li>
-                            <strong>
-                                Weak Secret Key:
-                            </strong> 
-                            Cracking the JWT secret made it possible to impersonate users and alter tokens, underscoring the 
-                            importance of using complex, randomized secrets.
-                        </li>
-                        <li>
-                            <strong>
-                                Token Expiry Manipulation:
-                            </strong> 
-                            Manipulating the <code>exp</code> field extended token lifespans, highlighting the need for 
-                            server-side token validation to enforce expiration.
-                        </li>
-                    </ul>
+
+                    <h3>3. Mass‑Assignment in Role Creation</h3>
                     <p>
-                        These flaws illustrate the critical role of strong JWT management in securing user sessions, 
-                        particularly for applications handling sensitive data.
+                        The registration endpoint accepted arbitrary JSON fields. By adding a <code>"role":"admin"</code> attribute,
+                        a regular user could self‑assign administrative privileges, breaking the principle of least privilege.
                     </p>
-        
-                    <h3>3. Mass Assignment in User Role Control</h3>
+
+                    <h3>4. Insecure Direct Object Reference (IDOR)</h3>
                     <p>
-                        Through a mass assignment vulnerability, the assessment team could escalate privileges by adding 
-                        unauthorized fields during registration. This issue highlighted the importance of back-end 
-                        validation, especially in enforcing role-based access controls (RBAC) to prevent unauthorized 
-                        privilege escalation.
+                        Authenticated users could modify any application record simply by guessing its identifier.
+                        No ownership check was performed on the <code>PUT /applications/{id}</code> endpoint, allowing unauthorized edits.
                     </p>
-        
-                    <h3>4. Reflected Cross-Site Scripting (XSS) Causing Denial of Service (DoS)</h3>
-                    <p>Injecting malicious JavaScript in specific fields triggered a DoS condition, with persistent 
-                        errors disrupting admin views. This vulnerability illustrated how XSS attacks could extend 
-                        beyond data exposure, affecting system functionality and usability. Proper input validation, 
-                        especially for user-controlled fields, is essential for mitigating XSS risks.
-                    </p>
-        
-                    <h3>5. User Enumeration via Password Reset</h3>
-                    <p>The application allowed enumeration of registered users through error messaging in the 
-                        password reset function. This vulnerability reminded the assessment team of the need 
-                        to handle error responses carefully, as these messages can inadvertently reveal 
-                        sensitive user information and lead to targeted attacks.
-                    </p>
-        
-                    <h3>6. Predictable Application IDs Enabling IDOR Exploits</h3>
-                    <p>Predictable patterns in application IDs allowed unauthorized access to other users’ 
-                        data—an insecure direct object reference (IDOR) vulnerability. Burp Suite’s Intruder 
-                        made testing these patterns efficient, reinforcing the importance of generating 
-                        randomized, unique identifiers for sensitive records.
+
+                    <h3>5. NoSQL Injection</h3>
+                    <p>
+                        The user‑lookup endpoint concatenated the supplied identifier directly into a MongoDB query.
+                        By injecting a crafted payload, an attacker retrieved the entire user collection, exposing emails, roles, and other personal data.
                     </p>
                 </section>
                 
                 <section>
-                    <h2>Understanding Vulnerabilities in a Business Context</h2>
+                    <!-- ==================== OTHER NOTABLE ISSUES ==================== -->
+                    <h2>Other Noteworthy Issues</h2>
+                    <ul>
+                        <li>Verbose error messages that leaked stack traces.</li>
+                        <li>CORS policy set to <code>*</code>, allowing any origin to make authenticated requests.</li>
+                        <li>No rate‑limiting or CAPTCHA on login – enabling brute‑force attacks.</li>
+                        <li>Open redirect in the “Target Website” field of the application‑creation form.</li>
+                        <li>Potential SSRF leading to delayed responses and possible denial‑of‑service.</li>
+                    </ul>
+
+                    <!-- ==================== REMEDIATION BLUEPRINT ==================== -->
+                    <h2>Remediation Blueprint</h2>
+
+                    <h3>Directory Traversal</h3>
+                    <ul>
+                        <li>Never concatenate user input with file paths. Use a safe‑join library or whitelist allowed filenames.</li>
+                        <li>Serve static assets from a dedicated folder with <code>path.resolve()</code> checks.</li>
+                    </ul>
+
+                    <h3>JWT Handling</h3>
+                    <ul>
+                        <li>Generate a strong, random secret (≥256 bits) and rotate it regularly.</li>
+                        <li>Set short <code>exp</code> claims (e.g., 15 min) and implement refresh‑token revocation.</li>
+                        <li>Validate the token’s audience and issuer fields.</li>
+                    </ul>
+
+                    <h3>Mass‑Assignment</h3>
+                    <ul>
+                        <li>Implement server‑side DTO validation and whitelist only the fields that may be set by the client.</li>
+                        <li>Reject any unexpected properties with a 400 response.</li>
+                    </ul>
+
+                    <h3>IDOR</h3>
+                    <ul>
+                        <li>Verify ownership before performing any update/delete operation.</li>
+                        <li>Consider using opaque identifiers (UUIDs) that are not guessable.</li>
+                    </ul>
+
+                    <h3>NoSQL Injection</h3>
+                    <ul>
+                        <li>Never embed raw user input into query objects. Use parameterized queries or an ORM that enforces schema validation.</li>
+                        <li>Sanitize and type‑check all incoming identifiers.</li>
+                    </ul>
+
+                    <h3>Additional Fixes</h3>
+                    <ul>
+                        <li>Return generic error messages; log detailed stacks internally only.</li>
+                        <li>Restrict CORS to known origins (e.g., <code>https://app.example.com</code>).</li>
+                        <li>Apply exponential back‑off, CAPTCHAs, or account lockout after repeated failed logins.</li>
+                        <li>Validate redirect URLs against an allow‑list or enforce same‑origin redirects.</li>
+                        <li>Whitelist outbound hosts for any user‑supplied URLs to mitigate SSRF.</li>
+                    </ul>
+                </section>
+                <section>
+                    <!-- ==================== LESSONS LEARNED ==================== -->
+                    <h2>Lessons Learned</h2>
                     <p>
-                        This assessment underscored the importance of viewing vulnerabilities not only as technical issues but as 
-                        real-world risks. By connecting each finding with its potential business impact—whether related to user trust, 
-                        data privacy, or application reliability—this approach added meaningful context to each vulnerability. For example, 
-                        while IDOR might appear technically minor, its business implications could be significant if unauthorized access to 
-                        sensitive user data is possible.
+                        The assessment reinforced three universal truths:
                     </p>
-                    <p>
-                        Understanding these vulnerabilities in a business context enhances reporting clarity and helps decision-makers 
-                        prioritize remediation based on real-world risk.
-                    </p>
+                    <ol>
+                        <li><strong>Defaults are dangerous.</strong> Open CORS, permissive error handling, and unchecked fields are common starter kits for attackers.</li>
+                        <li><strong>Validation must be server‑side.</strong> Client‑side checks are nice for UX, but they never replace robust back‑end enforcement.</li>
+                        <li><strong>Continuous testing pays off.</strong> Even a brand‑new codebase can inherit decades‑old classes of bugs if security isn’t baked in from day one.</li>
+                    </ol>
+
+                    <!-- ==================== QUICK CHECKLIST ==================== -->
+                    <div class="checklist">
+                        <h3>Quick Remediation Checklist</h3>
+                        <ul>
+                            <li>✅ Validate & sanitize all user‑controlled paths.</li>
+                            <li>✅ Rotate JWT secrets regularly; enforce short expiry & revocation.</li>
+                            <li>✅ Whitelist allowed fields on every API endpoint (prevent mass‑assignment).</li>
+                            <li>✅ Enforce ownership checks for every mutable resource (protect against IDOR).</li>
+                            <li>✅ Parameterize NoSQL queries or apply strict schema validation.</li>
+                            <li>✅ Hide internal error stacks; return generic error messages.</li>
+                            <li>✅ Restrict CORS to known origins; implement rate‑limiting on auth endpoints.</li>
+                            <li>✅ Sanitize all output to prevent reflected XSS.</li>
+                            <li>✅ Validate redirect URLs; disallow open redirects.</li>
+                            <li>✅ Guard against SSRF by whitelisting outbound destinations.</li>
+                        </ul>
+                    </div>
+                    <!-- ==================== FURTHER READING / RESOURCES ==================== -->
+                    <h2>Further Reading / Resources</h2>
+                    <div class="resources">
+                        <ul>
+                            <li><a href="https://owasp.org/www-community/attacks/Path_Traversal" target="_blank">Path Traversal Vulnerability</a></li>
+                            <li><a href="https://owasp.org/www-project-cheat-sheets/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" target="_blank">JSON Web Token Cheat Sheet</a></li>
+                            <li><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/" target="_blank">Mass Assignment (OWASP A05 2021)</a></li>
+                            <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank">IDOR – Broken Access Control (OWASP A01 2021)</a></li>
+                            <li><a href="https://owasp.org/www-community/attacks/xss/" target="_blank">XSS Vulnerabilities</a></li>
+                        </ul>
+                    </div>
                 </section>
                 <section>
                     <h2>Conclusion</h2>
                     <p>
-                        This assessment reinforced that securing web applications requires both technical skill 
-                        and an understanding of real-world impacts. Each vulnerability, from weak tokens to IDOR 
-                        issues, underscored the importance of a layered approach to security. By following a structured 
-                        framework like the OWASP guide and using specialized testing approaches, this assessment journey 
-                        has built a strong foundation for future security work.
+                        By addressing these findings, the platform moved from a state where an attacker could
+                        enumerate users, hijack sessions, and tamper with critical data to a far more resilient architecture.
+                        The same principles apply to any modern web application: start with a solid security framework,
+                        validate everything, and continuously test.
                     </p>
                     <p>
-                        Looking at security through both a technical and business lens ensures that the work goes 
-                        beyond fixing issues and contributes to a stronger, more resilient application landscape overall.
+                        Stay secure!
                     </p>
                 </section>
         </article>
@@ -392,16 +423,6 @@
                                 <span class="fa-stack">
                                     <a href="https://www.linkedin.com/in/samuel-k-addison/">
                                         <i class="fa-brands fa-linkedin-in fa-stack-1x"></i>
-                                    </a>
-                                </span>
-                                <span class="fa-stack">
-                                    <a href="https://twitter.com/Prof_Addy">
-                                        <i class="fa-brands fa-twitter fa-stack-1x"></i>
-                                    </a>
-                                </span>
-                                <span class="fa-stack">
-                                    <a href="https://www.youtube.com/@profaddy">
-                                        <i class="fa-brands fa-youtube fa-stack-1x"></i>
                                     </a>
                                 </span>
                             </div> 
